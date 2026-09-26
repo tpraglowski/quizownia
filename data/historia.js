@@ -75,27 +75,60 @@ SUBJECTS.push({
       ] }
     ],
     7: [
-      { id: 'rozbiory', name: 'Rozbiory i Konstytucja 3 maja', questions: [
-        { l: 1, q: 'W którym roku uchwalono Konstytucję 3 maja?', t: ['1791'], e: 'Konstytucja 3 maja 1791 r. — pierwsza w Europie i druga na świecie.' },
-        { l: 1, q: 'Ile było rozbiorów Polski?', t: ['3', 'trzy'], e: 'Trzy rozbiory: 1772, 1793, 1795.' },
-        { l: 1, q: 'Które państwa dokonały rozbiorów Polski?', o: ['Rosja, Prusy i Austria', 'Szwecja, Rosja i Turcja', 'Francja, Anglia i Prusy', 'Litwa, Rosja i Austria'], e: 'Zaborcami były Rosja, Prusy i Austria.' },
-        { l: 2, q: 'Kto był ostatnim królem Polski przed rozbiorami?', o: ['Stanisław August Poniatowski', 'Jan III Sobieski', 'August II Mocny', 'Stanisław Leszczyński'], e: 'Stanisław August Poniatowski abdykował w 1795 r.' },
-        { l: 2, q: 'W którym roku był III rozbiór Polski?', t: ['1795'], e: 'Po III rozbiorze w 1795 r. Polska zniknęła z mapy na 123 lata.' },
-        { l: 2, q: 'W jakiej bitwie kosynierzy zdobyli rosyjskie armaty w 1794 roku?', o: ['pod Racławicami', 'pod Grunwaldem', 'pod Wiedniem', 'pod Maciejowicami'], e: 'Bitwa pod Racławicami — zwycięstwo insurekcji kościuszkowskiej.' },
-        { l: 3, q: 'Jak nazywała się konfederacja przeciwników Konstytucji 3 maja?', o: ['targowicka', 'barska', 'warszawska', 'radomska'], e: 'Konfederacja targowicka (1792) wezwała na pomoc Rosję — słowo „targowica” oznacza zdradę.' },
-        { l: 3, q: 'W którym roku był I rozbiór Polski?', t: ['1772'], e: 'I rozbiór — 1772 r.' },
-        { l: 3, q: 'Co wprowadzała Konstytucja 3 maja?', o: ['trójpodział władzy i zniesienie liberum veto', 'zniesienie pańszczyzny', 'wybór króla przez chłopów', 'unię z Litwą'], e: 'Konstytucja wprowadziła trójpodział władzy, zniosła liberum veto i wolną elekcję.' }
+      { id: 'kongres-wiosna-ludow', name: 'Europa po kongresie wiedeńskim i Wiosna Ludów', questions: [
+        { l: 1, q: 'W jakich latach obradował kongres wiedeński?', o: ['1814–1815', '1791–1792', '1830–1831', '1848–1849'], e: 'Kongres wiedeński (1814–1815) ustalił nowy porządek w Europie po klęsce Napoleona.' },
+        { l: 1, q: 'Kto przegrał bitwę pod Waterloo w 1815 roku?', t: ['napoleon', 'napoleon bonaparte', 'napoleon i'], e: 'Pod Waterloo Napoleon ostatecznie przegrał i został zesłany na Wyspę Świętej Heleny.' },
+        { l: 1, q: 'W którym roku wybuchła Wiosna Ludów?', t: ['1848'], e: 'Wiosna Ludów to fala rewolucji w Europie w latach 1848–1849.' },
+        { l: 2, q: 'Jak nazywał się sojusz Rosji, Prus i Austrii z 1815 roku, broniący porządku ustalonego w Wiedniu?', o: ['Święte Przymierze', 'Trójporozumienie', 'Liga Narodów', 'Związek Reński'], e: 'Święte Przymierze miało tłumić rewolucje i ruchy narodowe.' },
+        { l: 2, q: 'Który austriacki minister odgrywał główną rolę na kongresie wiedeńskim?', o: ['Klemens von Metternich', 'Otto von Bismarck', 'Talleyrand', 'Aleksander I'], e: 'Klemens von Metternich był gospodarzem kongresu i symbolem polityki konserwatywnej.' },
+        { l: 2, q: 'Która zasada była jedną z zasad kongresu wiedeńskiego?', o: ['legitymizm — władza wraca do prawowitych dynastii', 'demokracja — władza ludu', 'prawo narodów do niepodległości', 'zniesienie monarchii'], e: 'Zasady kongresu: legitymizm, restauracja (przywrócenie dawnych porządków) i równowaga sił.' },
+        { l: 3, q: 'W którym państwie rewolucja lutowa 1848 roku obaliła monarchię?', o: ['we Francji', 'w Rosji', 'w Anglii', 'w Hiszpanii'], e: 'We Francji obalono króla Ludwika Filipa i proklamowano republikę.' },
+        { l: 3, q: 'Który naród w latach 1848–1849 walczył z Austrią, a Polacy (m.in. gen. Józef Bem) mu pomagali?', o: ['Węgrzy', 'Czesi', 'Włosi', 'Irlandczycy'], e: 'Węgrzy walczyli o niepodległość; powstanie stłumiła Austria z pomocą Rosji.' },
+        { l: 3, q: 'Kto w 1848 roku ogłosił „Manifest komunistyczny”?', o: ['Karol Marks i Fryderyk Engels', 'Metternich i Aleksander I', 'Napoleon III', 'Adam Mickiewicz'], e: 'Marks i Engels wzywali robotników do walki z kapitalizmem.' }
       ] },
-      { id: 'powstania', name: 'Powstania i niepodległość', questions: [
-        { l: 1, q: 'W którym roku wybuchło powstanie listopadowe?', t: ['1830'], e: 'Powstanie listopadowe wybuchło 29 listopada 1830 r.' },
-        { l: 1, q: 'W którym roku wybuchło powstanie styczniowe?', t: ['1863'], e: 'Powstanie styczniowe wybuchło 22 stycznia 1863 r.' },
-        { l: 1, q: 'Którego dnia obchodzimy Narodowe Święto Niepodległości?', o: ['11 listopada', '3 maja', '1 sierpnia', '15 sierpnia'], e: '11 listopada 1918 r. Polska odzyskała niepodległość.' },
-        { l: 2, q: 'Gdzie powstał Mazurek Dąbrowskiego?', o: ['we Włoszech (Legiony Polskie)', 'w Warszawie', 'w Paryżu', 'w Krakowie'], e: 'Józef Wybicki napisał go w 1797 r. dla Legionów Polskich we Włoszech.' },
-        { l: 2, q: 'Kto napisał słowa Mazurka Dąbrowskiego?', t: ['józef wybicki', 'wybicki'], e: 'Autorem słów jest Józef Wybicki.' },
-        { l: 2, q: 'Przeciwko któremu zaborcy wybuchły oba wielkie powstania (1830 i 1863)?', o: ['Rosji', 'Prusom', 'Austrii', 'Szwecji'], e: 'Oba powstania wybuchły w zaborze rosyjskim.' },
-        { l: 3, q: 'Kto był ostatnim dyktatorem powstania styczniowego?', o: ['Romuald Traugutt', 'Józef Piłsudski', 'Tadeusz Kościuszko', 'Józef Chłopicki'], e: 'Romuald Traugutt został stracony na stokach Cytadeli w 1864 r.' },
-        { l: 3, q: 'Jak nazywały się tajne władze powstania styczniowego?', o: ['Rząd Narodowy', 'Rada Stanu', 'Sejm Czteroletni', 'Rada Regencyjna'], e: 'Rząd Narodowy kierował powstaniem w konspiracji.' },
-        { l: 3, q: 'W którym roku zakończyła się I wojna światowa?', t: ['1918'], e: 'I wojna światowa zakończyła się w 1918 r. — wtedy Polska odzyskała niepodległość.' }
+      { id: 'ziemie-polskie-1815-1848', name: 'Ziemie polskie w latach 1815–1848', questions: [
+        { l: 1, q: 'Jakie państwo utworzono z większości ziem Księstwa Warszawskiego na kongresie wiedeńskim?', o: ['Królestwo Polskie (Kongresowe)', 'Wielkie Księstwo Poznańskie', 'Rzeczpospolitą Obojga Narodów', 'Galicję'], e: 'Królestwo Polskie było połączone z Rosją unią personalną.' },
+        { l: 1, q: 'Kto był królem Królestwa Polskiego?', o: ['car Rosji', 'król Prus', 'cesarz Austrii', 'wybrany przez sejm Polak'], e: 'Królem Polski był car — pierwszym Aleksander I.' },
+        { l: 1, q: 'W którym roku wybuchło powstanie listopadowe?', t: ['1830'], e: 'Powstanie wybuchło w nocy 29 listopada 1830 r.' },
+        { l: 2, q: 'Jak nazywało się małe państwo utworzone w 1815 roku wokół Krakowa?', o: ['Rzeczpospolita Krakowska (Wolne Miasto Kraków)', 'Księstwo Krakowskie', 'Królestwo Galicji', 'Małopolska'], e: 'Wolne Miasto Kraków było pod opieką trzech zaborców; w 1846 r. włączono je do Austrii.' },
+        { l: 2, q: 'W którym zaborze leżało Wielkie Księstwo Poznańskie?', o: ['pruskim', 'rosyjskim', 'austriackim'], e: 'Wielkie Księstwo Poznańskie należało do Prus.' },
+        { l: 2, q: 'Który minister skarbu Królestwa Polskiego założył Bank Polski?', o: ['Franciszek Ksawery Drucki-Lubecki', 'Adam Jerzy Czartoryski', 'Józef Chłopicki', 'Aleksander Wielopolski'], e: 'Drucki-Lubecki uzdrowił finanse i rozwijał przemysł Królestwa.' },
+        { l: 3, q: 'Jak nazywamy wyjazd tysięcy Polaków na Zachód (głównie do Francji) po upadku powstania listopadowego?', t: ['wielka emigracja'], e: 'Na Wielkiej Emigracji byli m.in. Mickiewicz, Słowacki i Chopin.' },
+        { l: 3, q: 'Klęska w której bitwie w 1831 roku przesądziła o upadku powstania listopadowego?', o: ['pod Ostrołęką', 'pod Racławicami', 'pod Grunwaldem', 'pod Olszynką Grochowską'], e: 'Po przegranej pod Ostrołęką (maj 1831) Rosjanie ruszyli na Warszawę i zdobyli ją we wrześniu.' },
+        { l: 3, q: 'Jak nazywa się wystąpienie chłopów przeciw szlachcie w Galicji w 1846 roku?', t: ['rabacja galicyjska', 'rabacja'], e: 'Władze austriackie wykorzystały niechęć chłopów do szlachty, by stłumić powstanie.' }
+      ] },
+      { id: 'powstanie-styczniowe', name: 'Powstanie styczniowe', questions: [
+        { l: 1, q: 'Kiedy wybuchło powstanie styczniowe?', o: ['22 stycznia 1863', '29 listopada 1830', '1 sierpnia 1944', '3 maja 1791'], e: 'Powstanie styczniowe wybuchło 22 stycznia 1863 r.' },
+        { l: 1, q: 'Przeciwko któremu zaborcy wybuchło powstanie styczniowe?', t: ['rosji', 'rosja', 'przeciw rosji', 'rosjanom'], e: 'Powstanie wybuchło w zaborze rosyjskim.' },
+        { l: 1, q: 'Jaki był główny sposób walki powstańców styczniowych?', o: ['walka partyzancka w małych oddziałach', 'wielkie bitwy regularnych armii', 'walki na morzu', 'obrona twierdz'], e: 'Powstańcy nie mieli armii, więc walczyli w oddziałach partyzanckich, często w lasach.' },
+        { l: 2, q: 'Co to była branka?', o: ['przymusowy pobór młodych mężczyzn do wojska rosyjskiego', 'podatek od ziemi', 'zakaz używania języka polskiego', 'wybór dyktatora'], e: 'Branka miała rozbić spiskowców — przyspieszyła wybuch powstania.' },
+        { l: 2, q: 'Które stronnictwo dążyło do szybkiego wybuchu powstania?', o: ['Czerwoni', 'Biali', 'Targowiczanie', 'Stańczycy'], e: 'Czerwoni chcieli walki zbrojnej, Biali — reform bez powstania.' },
+        { l: 2, q: 'Kto był ostatnim dyktatorem powstania styczniowego?', t: ['romuald traugutt', 'traugutt'], e: 'Romuald Traugutt kierował powstaniem od października 1863 r.' },
+        { l: 3, q: 'Kto był inicjatorem branki?', o: ['Aleksander Wielopolski', 'Romuald Traugutt', 'Ludwik Mierosławski', 'Józef Piłsudski'], e: 'Margrabia Aleksander Wielopolski chciał brankę wymierzyć w młodzież spiskową.' },
+        { l: 3, q: 'Co ogłosił Tymczasowy Rząd Narodowy w dniu wybuchu powstania?', o: ['uwłaszczenie chłopów', 'zniesienie monarchii w Rosji', 'unię z Litwą', 'wybór króla'], e: 'Dekrety uwłaszczeniowe miały przyciągnąć chłopów do powstania.' },
+        { l: 3, q: 'W którym roku stracono Romualda Traugutta?', t: ['1864'], e: 'Traugutt został stracony 5 sierpnia 1864 r. na stokach Cytadeli Warszawskiej.' }
+      ] },
+      { id: 'pod-zaborami', name: 'Przemiany na ziemiach polskich pod zaborami', questions: [
+        { l: 1, q: 'Co to była rusyfikacja?', o: ['narzucanie Polakom języka i kultury rosyjskiej', 'budowa kolei w Rosji', 'uwłaszczenie chłopów', 'walka z Kościołem w Prusach'], e: 'Rusyfikacja nasiliła się po powstaniu styczniowym, np. rosyjski język w szkołach.' },
+        { l: 1, q: 'W którym zaborze Polacy mieli najwięcej swobód (autonomia Galicji)?', o: ['austriackim', 'rosyjskim', 'pruskim'], e: 'W Galicji były polskie szkoły, urzędy i uniwersytety w Krakowie i Lwowie.' },
+        { l: 1, q: 'O co strajkowały dzieci we Wrześni w 1901 roku?', o: ['o naukę religii po polsku', 'o krótsze lekcje', 'o darmowe podręczniki', 'o wakacje'], e: 'Uczniowie odmówili odpowiadania po niemiecku na lekcjach religii.' },
+        { l: 2, q: 'Jak nazywała się walka Bismarcka z Kościołem katolickim w Prusach?', t: ['kulturkampf'], e: 'Kulturkampf („walka o kulturę”) uderzał też w polskość.' },
+        { l: 2, q: 'Który chłop zamieszkał w wozie cyrkowym, bo Prusacy nie pozwolili mu zbudować domu?', t: ['michał drzymała', 'drzymała'], e: 'Wóz Drzymały stał się symbolem oporu przeciw germanizacji.' },
+        { l: 2, q: 'Co oznaczało hasło „pracy organicznej”?', o: ['rozwój gospodarki, oświaty i kultury zamiast walki zbrojnej', 'nowe powstanie narodowe', 'emigrację do Ameryki', 'współpracę z zaborcami przeciw chłopom'], e: 'Polacy mieli wzmacniać społeczeństwo „od środka”, np. zakładając spółki i szkoły.' },
+        { l: 3, q: 'Kto był przywódcą Narodowej Demokracji (endecji)?', o: ['Roman Dmowski', 'Józef Piłsudski', 'Wincenty Witos', 'Ignacy Daszyński'], e: 'Roman Dmowski — twórca ruchu narodowego.' },
+        { l: 3, q: 'Jaka partia założona w 1892 roku łączyła hasła socjalistyczne i niepodległościowe (działał w niej Piłsudski)?', o: ['Polska Partia Socjalistyczna (PPS)', 'Stronnictwo Ludowe', 'Narodowa Demokracja', 'Proletariat'], e: 'PPS walczyła o prawa robotników i niepodległą Polskę.' },
+        { l: 3, q: 'W którym roku wybuchła rewolucja w Rosji i Królestwie Polskim (trwająca do 1907)?', t: ['1905'], e: 'Rewolucja 1905–1907 przyniosła m.in. zgodę na prywatne szkoły z językiem polskim.' }
+      ] },
+      { id: 'swiat-xix-wiek', name: 'Świat w II połowie XIX wieku', questions: [
+        { l: 1, q: 'Czego dotyczył główny spór w wojnie secesyjnej w USA?', o: ['niewolnictwa', 'podatku od herbaty', 'kolonii w Afryce', 'religii'], e: 'Wojna Północy z Południem (1861–1865) zakończyła się zniesieniem niewolnictwa.' },
+        { l: 1, q: 'Który prezydent USA rządził podczas wojny secesyjnej?', t: ['abraham lincoln', 'lincoln'], e: 'Abraham Lincoln ogłosił zniesienie niewolnictwa; zginął w zamachu w 1865 r.' },
+        { l: 1, q: 'Kogo nazywano „żelaznym kanclerzem”, twórcą zjednoczenia Niemiec?', o: ['Otto von Bismarcka', 'Napoleona III', 'Metternicha', 'Wilhelma II'], e: 'Bismarck zjednoczył Niemcy „krwią i żelazem”, czyli przez wojny.' },
+        { l: 2, q: 'W którym roku ogłoszono powstanie Cesarstwa Niemieckiego?', t: ['1871'], e: 'W 1871 r. w Wersalu proklamowano Cesarstwo Niemieckie.' },
+        { l: 2, q: 'Kto dowodził wyprawą „tysiąca czerwonych koszul” podczas zjednoczenia Włoch?', o: ['Giuseppe Garibaldi', 'Camillo Cavour', 'Wiktor Emanuel II', 'Mussolini'], e: 'Garibaldi zdobył Sycylię i południe Włoch.' },
+        { l: 2, q: 'Kto opatentował telefon w 1876 roku?', o: ['Alexander Graham Bell', 'Thomas Edison', 'Nikola Tesla', 'Guglielmo Marconi'], e: 'Telefon Bella zrewolucjonizował komunikację; Edison słynie m.in. z żarówki.' },
+        { l: 3, q: 'Na jakiej konferencji w latach 1884–1885 państwa europejskie ustaliły zasady podziału Afryki?', o: ['berlińskiej', 'wiedeńskiej', 'paryskiej', 'jałtańskiej'], e: 'Konferencja berlińska przyspieszyła kolonialny „wyścig o Afrykę”.' },
+        { l: 3, q: 'Który Polak skonstruował lampę naftową?', t: ['ignacy łukasiewicz', 'łukasiewicz'], e: 'Ignacy Łukasiewicz (1853) — twórca przemysłu naftowego.' },
+        { l: 3, q: 'Jak nazywa się okres szybkiej modernizacji Japonii od 1868 roku?', o: ['era Meiji', 'szogunat', 'era samurajów', 'rewolucja kulturalna'], e: 'W erze Meiji Japonia wzorowała się na Zachodzie i szybko uprzemysłowiła się.' }
       ] }
     ],
     8: [
