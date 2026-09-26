@@ -1,24 +1,29 @@
 # Quizownia
 
-Quizy do nauki w stylu Kahoot: pytania z czterema kolorowymi odpowiedziami, odliczanie czasu, punkty za szybkość, serie poprawnych odpowiedzi i podium.
+Lekcje z pytaniami dla klas 4–8: **wybierz przedmiot → klasę → temat** i rozpocznij lekcję.
 
-- **Gra solo lub kilka osób na zmianę** na jednym urządzeniu
-- **Tryb nauki**: po grze omówienie każdego pytania i przycisk „Powtórz błędne”
-- **Własne quizy**: edytor pytań, zapis w przeglądarce, eksport/import do pliku `.json`
-- Skróty klawiszowe 1–4 do odpowiadania
+- Pytania do wyboru (A/B/C/D) i do wpisania
+- Po błędzie system wyjaśnia, dlaczego odpowiedź jest inna
+- **Poziom dopasowuje się**: 2 dobre odpowiedzi z rzędu → trudniejsze pytania, błąd → łatwiejsze
+- Gwiazdki i postęp dla każdego tematu (zapisywane w przeglądarce)
+- Po lekcji: lista błędów z wyjaśnieniami i przycisk „Powtórz błędy”
+- Matematyka: zadania generowane losowo — nigdy się nie kończą
 
-Strona jest statyczna (HTML + CSS + JS) i działa na GitHub Pages bez żadnego serwera.
+Strona jest statyczna (HTML + CSS + JS) i działa na GitHub Pages bez serwera.
 
-## Format pliku quizu
+## Dodawanie pytań
 
-```json
-{
-  "title": "Mój quiz",
-  "emoji": "📚",
-  "questions": [
-    { "q": "Ile to 2 + 2?", "a": ["3", "4", "5", "22"], "c": 1, "t": 20 }
-  ]
-}
+Pytania są w folderze `data/` — jeden plik na przedmiot. Każdy temat to:
+
+```js
+{ id: 'ulamki', name: 'Ułamki', questions: [
+  // wybór: PIERWSZA odpowiedź jest poprawna (kolejność miesza się sama)
+  { l: 1, q: 'Ile to 1/2 + 1/2?', o: ['1', '2/4', '1/4', '2'], e: 'Połówka i połówka to całość.' },
+  // wpisywanie: wszystkie akceptowane odpowiedzi
+  { l: 2, q: 'Stolica Polski?', t: ['warszawa'], e: 'Warszawa jest stolicą od 1596 r.' }
+] }
 ```
 
-`c` to numer poprawnej odpowiedzi (od 0), `t` to czas w sekundach (5, 10, 15, 20, 30 lub 60).
+`l` to poziom (1 łatwy, 2 średni, 3 trudny), `e` to wyjaśnienie pokazywane po błędzie. Wielkość liter i spacje nie mają znaczenia, a liczby można wpisać z przecinkiem lub jako ułamek.
+
+Nowy przedmiot: dodaj plik w `data/` z `SUBJECTS.push({ id, name, emoji, color, grades: { 4: [...], 5: [...] } })` i dołącz go w `index.html`.

@@ -1,28 +1,19 @@
 'use strict';
 
 const app = document.getElementById('app');
-const STORE_CUSTOM = 'quizownia.custom';
-const STORE_BEST = 'quizownia.best';
-const TIMES = [5, 10, 15, 20, 30, 60];
-
-const SHAPES = [
-  '<svg class="shape" viewBox="0 0 40 40"><polygon points="20,4 37,35 3,35" fill="#fff"/></svg>',
-  '<svg class="shape" viewBox="0 0 40 40"><polygon points="20,2 38,20 20,38 2,20" fill="#fff"/></svg>',
-  '<svg class="shape" viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="#fff"/></svg>',
-  '<svg class="shape" viewBox="0 0 40 40"><rect x="5" y="5" width="30" height="30" fill="#fff"/></svg>'
-];
+const STORE_PROGRESS = 'quizownia.progress';
+const STORE_GRADE = 'quizownia.grade';
+const LEVELS = ['', 'łatwy', 'średni', 'trudny'];
+const LETTERS = ['A', 'B', 'C', 'D'];
 
 // ---------- Storage ----------
 function load(key, fallback) {
   try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
 }
 function save(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* brak miejsca / tryb prywatny */ }
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* tryb prywatny / brak miejsca */ }
 }
-const customQuizzes = () => load(STORE_CUSTOM, []);
-const allQuizzes = () => [...BUILTIN_QUIZZES, ...customQuizzes()];
-const findQuiz = id => allQuizzes().find(q => q.id === id);
-const isCustom = id => customQuizzes().some(q => q.id === id);
+const progressKey = (s, g, t) => `${s}/${g}/${t}`;
 
 // ---------- Helpers ----------
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -34,514 +25,360 @@ const shuffle = arr => {
   }
   return a;
 };
-function toast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2200);
-}
-function questionsLabel(n) {
-  if (n === 1) return '1 pytanie';
-  const d = n % 10, h = n % 100;
-  return `${n} ${d >= 2 && d <= 4 && (h < 12 || h > 14) ? 'pytania' : 'pytań'}`;
-}
+const findSubject = id => SUBJECTS.find(s => s.id === id);
+const gradesOf = subject => Object.keys(subject.grades).map(Number).sort((a, b) => a - b);
+const starsHtml = n => '★'.repeat(n) + '<span class="off">' + '★'.repeat(3 - n) + '</span>';
+const gradeRange = subject => {
+  const g = gradesOf(subject);
+  return g.length === 1 ? `klasa ${g[0]}` : `klasy ${g[0]}–${g[g.length - 1]}`;
+};
 
-let timerId = null;
 let keyHandler = null;
-function clearGameHooks() {
-  clearInterval(timerId);
-  timerId = null;
+function setKeys(fn) {
   if (keyHandler) document.removeEventListener('keydown', keyHandler);
-  keyHandler = null;
+  keyHandler = fn;
+  if (fn) document.addEventListener('keydown', fn);
 }
 
-// ---------- Home ----------
+// ---------- Sprawdzanie odpowiedzi ----------
+const stripDiacritics = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ł/g, 'l');
+function normalize(s) {
+  return String(s).toLowerCase().trim()
+    .replace(/[’`]/g, "'").replace(/−/g, '-')
+    .replace(/\s+/g, ' ').replace(/[.!]+$/, '');
+}
+function asNumber(s) {
+  const v = normalize(s).replace(/\s/g, '').replace(',', '.').replace(/°$/, '');
+  if (/^-?\d+(\.\d+)?$/.test(v)) return Number(v);
+  const f = v.match(/^(-?\d+)\/(\d+)$/);
+  if (f && +f[2] !== 0) return f[1] / f[2];
+  return null;
+}
+// Zwraca: 'ok' | 'ok-diacritics' | 'bad'
+function checkTyped(input, accepted) {
+  const n = normalize(input);
+  if (!n) return 'bad';
+  for (const a of accepted) {
+    const x = asNumber(n), y = asNumber(a);
+    if (x !== null && y !== null && Math.abs(x - y) < 1e-9) return 'ok';
+    if (n === normalize(a)) return 'ok';
+  }
+  for (const a of accepted) {
+    if (stripDiacritics(n) === stripDiacritics(normalize(a))) return 'ok-diacritics';
+  }
+  return 'bad';
+}
+
+// ---------- Routing ----------
+function go(hash) {
+  if (location.hash === hash) route(); else location.hash = hash;
+}
+function route() {
+  const [view, ...args] = location.hash.replace(/^#\/?/, '').split('/').map(decodeURIComponent);
+  setKeys(null);
+  if (view === 'przedmiot' && findSubject(args[0])) return renderSubject(args[0], +args[1]);
+  if (view === 'lekcja' && findSubject(args[0])) {
+    const topic = findSubject(args[0]).grades[args[1]]?.find(t => t.id === args[2]);
+    if (topic) return startLesson(args[0], +args[1], topic);
+  }
+  renderHome();
+}
+window.addEventListener('hashchange', route);
+
+// ---------- Strona główna: wybór przedmiotu ----------
 function renderHome() {
-  clearGameHooks();
-  const best = load(STORE_BEST, {});
-  const card = q => `
-    <div class="quiz-card">
-      <div class="emoji">${esc(q.emoji || '❓')}</div>
-      <h3>${esc(q.title)}</h3>
-      <div class="meta">${questionsLabel(q.questions.length)}${best[q.id] != null ? ` · rekord: ${best[q.id]} pkt` : ''}</div>
-      <div class="actions">
-        <button class="play" data-play="${esc(q.id)}">▶ Graj</button>
-        ${isCustom(q.id)
-          ? `<button data-edit="${esc(q.id)}" title="Edytuj quiz">Edytuj</button>`
-          : `<button data-copy="${esc(q.id)}" title="Skopiuj i edytuj">Kopiuj</button>`}
-        <button data-export="${esc(q.id)}" title="Pobierz jako plik .json">Pobierz</button>
-      </div>
-    </div>`;
-
-  const custom = customQuizzes();
+  const progress = load(STORE_PROGRESS, {});
   app.innerHTML = `
-    <h1 class="logo">Quizownia</h1>
-    <p class="tagline">Ucz się, grając. Rozwiązuj quizy sam albo rywalizuj ze znajomymi.</p>
-
-    <h2 class="section-title">Twoje quizy</h2>
-    <div class="grid">
-      ${custom.map(card).join('')}
-      <div class="quiz-card new" id="new-quiz"><div class="emoji">＋</div><strong>Stwórz quiz</strong></div>
-    </div>
-    <div class="row" style="margin-top:12px">
-      <button class="ghost" id="import-btn">⬆️ Wczytaj quiz z pliku</button>
-      <input type="file" id="import-file" accept=".json,application/json" hidden>
-    </div>
-
-    <h2 class="section-title">Gotowe quizy</h2>
-    <div class="grid">${BUILTIN_QUIZZES.map(card).join('')}</div>
-  `;
-
-  app.querySelector('#new-quiz').onclick = () => renderEditor(null);
-  app.querySelectorAll('[data-play]').forEach(b => b.onclick = () => renderSetup(b.dataset.play));
-  app.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => renderEditor(b.dataset.edit));
-  app.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {
-    const src = findQuiz(b.dataset.copy);
-    renderEditor(null, { ...structuredClone(src), title: src.title + ' (kopia)' });
-  });
-  app.querySelectorAll('[data-export]').forEach(b => b.onclick = () => exportQuiz(findQuiz(b.dataset.export)));
-
-  const fileInput = app.querySelector('#import-file');
-  app.querySelector('#import-btn').onclick = () => fileInput.click();
-  fileInput.onchange = async () => {
-    const file = fileInput.files[0];
-    if (!file) return;
-    try {
-      const quiz = validateQuiz(JSON.parse(await file.text()));
-      quiz.id = 'q' + Date.now();
-      save(STORE_CUSTOM, [...customQuizzes(), quiz]);
-      toast('Wczytano quiz „' + quiz.title + '”');
-      renderHome();
-    } catch (e) {
-      toast('Nie udało się wczytać: ' + e.message);
-    }
-  };
-}
-
-function validateQuiz(data) {
-  if (!data || typeof data.title !== 'string' || !Array.isArray(data.questions) || !data.questions.length) {
-    throw new Error('zły format pliku');
-  }
-  return {
-    title: data.title.slice(0, 80),
-    emoji: typeof data.emoji === 'string' ? data.emoji.slice(0, 4) : '❓',
-    questions: data.questions.map(q => {
-      if (typeof q.q !== 'string' || !Array.isArray(q.a) || q.a.length !== 4 || !(q.c >= 0 && q.c <= 3)) {
-        throw new Error('błędne pytanie');
-      }
-      return { q: q.q, a: q.a.map(String), c: Number(q.c), t: TIMES.includes(q.t) ? q.t : 20 };
-    })
-  };
-}
-
-function exportQuiz(quiz) {
-  const { title, emoji, questions } = quiz;
-  const blob = new Blob([JSON.stringify({ title, emoji, questions }, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = title.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '').toLowerCase() + '.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-// ---------- Editor ----------
-function renderEditor(id, preset) {
-  const existing = id ? findQuiz(id) : null;
-  const draft = structuredClone(existing || preset || {
-    title: '', emoji: '📚', questions: [{ q: '', a: ['', '', '', ''], c: 0, t: 20 }]
-  });
-
-  const draw = () => {
-    app.innerHTML = `
-      <div class="panel">
-        <div class="row">
-          <h2 style="margin:0">${existing ? 'Edytuj quiz' : 'Nowy quiz'}</h2>
-          <span class="spacer"></span>
-          <button class="ghost" style="color:var(--text);background:#eee" id="cancel">Anuluj</button>
-          ${existing ? '<button class="danger" id="delete">Usuń</button>' : ''}
-          <button class="primary" id="save">Zapisz</button>
-        </div>
-        <div class="row" style="align-items:flex-end">
-          <div style="width:90px"><label>Ikona</label><input type="text" id="emoji" maxlength="4" value="${esc(draft.emoji)}"></div>
-          <div style="flex:1;min-width:200px"><label>Tytuł quizu</label><input type="text" id="title" maxlength="80" placeholder="np. Historia: średniowiecze" value="${esc(draft.title)}"></div>
-        </div>
-        <div id="questions">
-          ${draft.questions.map((q, i) => `
-            <div class="q-edit" data-i="${i}">
-              <div class="head">
-                <strong>Pytanie ${i + 1}</strong>
-                <button data-up="${i}" ${i === 0 ? 'disabled' : ''} title="W górę">↑</button>
-                <button data-down="${i}" ${i === draft.questions.length - 1 ? 'disabled' : ''} title="W dół">↓</button>
-                <button data-del="${i}" ${draft.questions.length === 1 ? 'disabled' : ''} title="Usuń pytanie">✕</button>
-              </div>
-              <input type="text" data-field="q" value="${esc(q.q)}" placeholder="Treść pytania">
-              <div class="answers">
-                ${q.a.map((a, j) => `
-                  <div class="ans c${j}">
-                    <input type="radio" name="c${i}" value="${j}" ${q.c === j ? 'checked' : ''} title="Poprawna odpowiedź">
-                    <input type="text" data-ans="${j}" value="${esc(a)}" placeholder="Odpowiedź ${j + 1}">
-                  </div>`).join('')}
-              </div>
-              <div class="time">⏱ Czas:
-                <select data-field="t">${TIMES.map(t => `<option value="${t}" ${q.t === t ? 'selected' : ''}>${t} s</option>`).join('')}</select>
-                <span style="color:var(--muted)">· zaznacz kółkiem poprawną odpowiedź</span>
-              </div>
-            </div>`).join('')}
-        </div>
-        <div class="row" style="margin-top:16px"><button id="add-q">＋ Dodaj pytanie</button></div>
-      </div>`;
-
-    const sync = () => {
-      draft.title = app.querySelector('#title').value;
-      draft.emoji = app.querySelector('#emoji').value;
-      app.querySelectorAll('.q-edit').forEach(el => {
-        const q = draft.questions[+el.dataset.i];
-        q.q = el.querySelector('[data-field=q]').value;
-        q.t = +el.querySelector('[data-field=t]').value;
-        q.a = [...el.querySelectorAll('[data-ans]')].map(inp => inp.value);
-        q.c = +el.querySelector('input[type=radio]:checked').value;
-      });
-    };
-    const move = (i, d) => {
-      sync();
-      const qs = draft.questions;
-      [qs[i], qs[i + d]] = [qs[i + d], qs[i]];
-      draw();
-    };
-
-    app.querySelector('#add-q').onclick = () => {
-      sync();
-      draft.questions.push({ q: '', a: ['', '', '', ''], c: 0, t: 20 });
-      draw();
-      app.querySelector('.q-edit:last-child [data-field=q]').focus();
-    };
-    app.querySelectorAll('[data-up]').forEach(b => b.onclick = () => move(+b.dataset.up, -1));
-    app.querySelectorAll('[data-down]').forEach(b => b.onclick = () => move(+b.dataset.down, 1));
-    app.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
-      sync();
-      draft.questions.splice(+b.dataset.del, 1);
-      draw();
-    });
-    app.querySelector('#cancel').onclick = renderHome;
-    if (existing) {
-      app.querySelector('#delete').onclick = () => {
-        if (!confirm('Usunąć quiz „' + existing.title + '”?')) return;
-        save(STORE_CUSTOM, customQuizzes().filter(q => q.id !== id));
-        renderHome();
-      };
-    }
-    app.querySelector('#save').onclick = () => {
-      sync();
-      if (!draft.title.trim()) return toast('Podaj tytuł quizu');
-      const bad = draft.questions.findIndex(q => !q.q.trim() || q.a.some(a => !a.trim()));
-      if (bad >= 0) return toast(`Uzupełnij pytanie ${bad + 1} i wszystkie odpowiedzi`);
-      const list = customQuizzes();
-      const quiz = { ...draft, title: draft.title.trim(), id: id || 'q' + Date.now() };
-      const idx = list.findIndex(q => q.id === quiz.id);
-      if (idx >= 0) list[idx] = quiz; else list.push(quiz);
-      save(STORE_CUSTOM, list);
-      toast('Zapisano!');
-      renderHome();
-    };
-  };
-  draw();
-}
-
-// ---------- Setup ----------
-let lastPlayers = load('quizownia.players', ['Gracz 1']);
-
-function renderSetup(quizId) {
-  const quiz = findQuiz(quizId);
-  let players = [...lastPlayers];
-
-  const draw = () => {
-    app.innerHTML = `
-      <div class="panel narrow">
-        <div style="font-size:2.5rem">${esc(quiz.emoji || '❓')}</div>
-        <h2>${esc(quiz.title)}</h2>
-        <p style="color:var(--muted);margin-top:0">${questionsLabel(quiz.questions.length)}</p>
-
-        <label>Gracze (na zmianę na jednym urządzeniu)</label>
-        <div class="player-list">
-          ${players.map((p, i) => `
-            <div class="row">
-              <input type="text" data-p="${i}" value="${esc(p)}" maxlength="20">
-              ${players.length > 1 ? `<button data-rm="${i}" title="Usuń gracza">✕</button>` : ''}
-            </div>`).join('')}
-        </div>
-        ${players.length < 8 ? '<button id="add-p" style="margin-top:8px">＋ Dodaj gracza</button>' : ''}
-
-        <label>Kolejność</label>
-        <div class="mode-pick">
-          <label><input type="radio" name="order" value="normal" checked><span><strong>Po kolei</strong>Pytania jak w quizie</span></label>
-          <label><input type="radio" name="order" value="shuffle"><span><strong>Losowo</strong>Mieszaj pytania i odpowiedzi</span></label>
-        </div>
-
-        <div class="row" style="margin-top:22px">
-          <button class="ghost" style="color:var(--text);background:#eee" id="back">← Wróć</button>
-          <span class="spacer"></span>
-          <button class="primary" id="start">Start!</button>
-        </div>
-      </div>`;
-
-    const sync = () => {
-      players = [...app.querySelectorAll('[data-p]')].map(i => i.value);
-    };
-    const addBtn = app.querySelector('#add-p');
-    if (addBtn) addBtn.onclick = () => { sync(); players.push('Gracz ' + (players.length + 1)); draw(); };
-    app.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { sync(); players.splice(+b.dataset.rm, 1); draw(); });
-    app.querySelector('#back').onclick = renderHome;
-    app.querySelector('#start').onclick = () => {
-      sync();
-      const names = players.map((p, i) => p.trim() || 'Gracz ' + (i + 1));
-      lastPlayers = names;
-      save('quizownia.players', names);
-      const shuffled = app.querySelector('input[name=order]:checked').value === 'shuffle';
-      startGame(quiz, names, shuffled ? prepareShuffled(quiz.questions) : quiz.questions);
-    };
-  };
-  draw();
-}
-
-function prepareShuffled(questions) {
-  return shuffle(questions).map(q => {
-    const order = shuffle([0, 1, 2, 3]);
-    return { ...q, a: order.map(i => q.a[i]), c: order.indexOf(q.c) };
-  });
-}
-
-// ---------- Game ----------
-let game = null;
-
-function startGame(quiz, names, questions) {
-  game = {
-    quiz,
-    questions,
-    players: names.map(name => ({ name, score: 0, streak: 0, bestStreak: 0, answers: [] })),
-    qi: 0,
-    pi: 0
-  };
-  nextTurn();
-}
-
-const multi = () => game.players.length > 1;
-
-function nextTurn() {
-  if (multi()) renderHandoff(); else renderQuestion();
-}
-
-function renderHandoff() {
-  clearGameHooks();
-  const p = game.players[game.pi];
-  app.innerHTML = `
-    <div class="game-top"><span class="pill">Pytanie ${game.qi + 1} / ${game.questions.length}</span></div>
-    <div class="handoff">
-      <div>Teraz odpowiada</div>
-      <div class="who">${esc(p.name)}</div>
-      <button class="primary" id="ready">Jestem gotowy!</button>
-    </div>`;
-  app.querySelector('#ready').onclick = renderQuestion;
-  app.querySelector('#ready').focus();
-}
-
-function renderQuestion() {
-  clearGameHooks();
-  const q = game.questions[game.qi];
-  const p = game.players[game.pi];
-  const start = performance.now();
-  let answered = false;
-
-  app.innerHTML = `
-    <div class="game-top">
-      <span class="pill">Pytanie ${game.qi + 1} / ${game.questions.length}</span>
-      <span class="pill">${esc(p.name)} · ${p.score} pkt${p.streak >= 2 ? ` · 🔥${p.streak}` : ''}</span>
-    </div>
-    <div class="question-box">${esc(q.q)}</div>
-    <div class="timer-wrap">
-      <div class="timer" id="timer">${q.t}</div>
-      <div class="timer-bar"><div id="bar" style="width:100%"></div></div>
-    </div>
-    <div class="answers-grid">
-      ${q.a.map((a, i) => `<button class="answer-btn c${i}" data-a="${i}">${SHAPES[i]}<span>${esc(a)}</span></button>`).join('')}
-    </div>
-    <p style="text-align:center;opacity:.6;font-size:.8rem;margin-top:14px">Skróty klawiszowe: 1 2 3 4</p>`;
-
-  const timerEl = app.querySelector('#timer');
-  const barEl = app.querySelector('#bar');
-
-  const finish = choice => {
-    if (answered) return;
-    answered = true;
-    clearGameHooks();
-    const elapsed = Math.min((performance.now() - start) / 1000, q.t);
-    const correct = choice === q.c;
-    let points = 0;
-    if (correct) {
-      p.streak++;
-      p.bestStreak = Math.max(p.bestStreak, p.streak);
-      points = Math.round(1000 * (1 - elapsed / q.t / 2)) + Math.min(p.streak - 1, 5) * 100;
-    } else {
-      p.streak = 0;
-    }
-    p.score += points;
-    p.answers[game.qi] = { choice, correct, points, time: elapsed };
-    renderFeedback(choice, points);
-  };
-
-  app.querySelectorAll('[data-a]').forEach(b => b.onclick = () => finish(+b.dataset.a));
-  keyHandler = e => {
-    const n = +e.key;
-    if (n >= 1 && n <= 4) finish(n - 1);
-  };
-  document.addEventListener('keydown', keyHandler);
-
-  timerId = setInterval(() => {
-    const left = q.t - (performance.now() - start) / 1000;
-    if (left <= 0) return finish(null);
-    timerEl.textContent = Math.ceil(left);
-    barEl.style.width = (left / q.t * 100) + '%';
-  }, 100);
-}
-
-function renderFeedback(choice, points) {
-  const q = game.questions[game.qi];
-  const p = game.players[game.pi];
-  const correct = choice === q.c;
-  const title = correct ? 'Dobrze!' : choice === null ? 'Koniec czasu!' : 'Źle!';
-
-  app.innerHTML = `
-    <div class="game-top">
-      <span class="pill">Pytanie ${game.qi + 1} / ${game.questions.length}</span>
-      <span class="pill">${esc(p.name)} · ${p.score} pkt</span>
-    </div>
-    <div class="feedback ${correct ? 'ok' : 'bad'}">
-      <div class="big">${correct ? '✔' : '✘'} ${title}</div>
-      ${correct
-        ? `<div class="pts">+${points} pkt${p.streak >= 2 ? ` · seria 🔥${p.streak}` : ''}</div>`
-        : '<div style="margin-top:8px;font-weight:500">Poprawna odpowiedź jest zaznaczona poniżej</div>'}
-    </div>
-    ${multi() ? '' : `<div class="question-box" style="font-size:1.2rem;margin-bottom:14px">${esc(q.q)}</div>`}
-    <div class="answers-grid">
-      ${q.a.map((a, i) => `
-        <div class="answer-btn c${i} ${i === q.c ? 'right' : 'dim'}">${SHAPES[i]}<span>${esc(a)}</span>
-          <span class="mark">${i === q.c ? '✔' : i === choice ? '✘' : ''}</span></div>`).join('')}
-    </div>
-    <div class="row center" style="margin-top:22px"><button class="primary" id="next">Dalej →</button></div>`;
-
-  const next = app.querySelector('#next');
-  next.focus();
-  next.onclick = () => {
-    if (game.pi < game.players.length - 1) {
-      game.pi++;
-      return nextTurn();
-    }
-    game.pi = 0;
-    if (multi()) renderScoreboard();
-    else advanceQuestion();
-  };
-}
-
-function advanceQuestion() {
-  game.qi++;
-  if (game.qi < game.questions.length) nextTurn();
-  else renderResults();
-}
-
-function ranked() {
-  return [...game.players].sort((a, b) => b.score - a.score);
-}
-
-function renderScoreboard() {
-  const last = game.qi === game.questions.length - 1;
-  app.innerHTML = `
-    <h2 style="text-align:center">Ranking po pytaniu ${game.qi + 1}</h2>
-    <div class="scoreboard">
-      ${ranked().map((p, i) => {
-        const ans = p.answers[game.qi];
-        return `<div class="score-row">
-          <span class="place">${i + 1}.</span>
-          <span class="name">${esc(p.name)} ${ans.correct ? '✔' : '✘'}</span>
-          ${p.streak >= 2 ? `<span class="streak">🔥${p.streak}</span>` : ''}
-          <span class="pts">${p.score}</span>
-        </div>`;
+    <header class="hero">
+      <h1 class="logo">Quizownia</h1>
+      <p class="tagline">Wybierz przedmiot, klasę i temat — i zacznij lekcję. Pytania dopasują się do Twojego poziomu.</p>
+    </header>
+    <div class="subjects">
+      ${SUBJECTS.map(s => {
+        let stars = 0, max = 0;
+        for (const g of gradesOf(s)) for (const t of s.grades[g]) {
+          max += 3;
+          stars += progress[progressKey(s.id, g, t.id)]?.stars || 0;
+        }
+        return `
+          <a class="subject-tile" href="#/przedmiot/${s.id}" style="--c:${s.color}">
+            <span class="emoji">${s.emoji}</span>
+            <span class="name">${esc(s.name)}</span>
+            <span class="meta">${gradeRange(s)} · ★ ${stars}/${max}</span>
+          </a>`;
       }).join('')}
-    </div>
-    <div class="row center" style="margin-top:22px"><button class="primary" id="next">${last ? 'Zobacz podium 🏆' : 'Następne pytanie →'}</button></div>`;
-  const next = app.querySelector('#next');
-  next.focus();
-  next.onclick = advanceQuestion;
+    </div>`;
 }
 
-function renderResults() {
-  clearGameHooks();
-  const { quiz, questions, players } = game;
-  const top = ranked();
-
-  // rekord zapisujemy tylko dla pełnego quizu (nie dla powtórki błędów)
-  if (!game.isRetry) {
-    const best = load(STORE_BEST, {});
-    if (top[0].score > (best[quiz.id] ?? -1)) {
-      best[quiz.id] = top[0].score;
-      save(STORE_BEST, best);
-    }
-  }
-
-  let head;
-  if (multi()) {
-    const step = (p, cls, medal) => p ? `<div class="step ${cls}"><div class="medal">${medal}</div><div class="n">${esc(p.name)}</div><div>${p.score} pkt</div></div>` : '';
-    head = `
-      <h1 class="logo">Podium</h1>
-      <div class="podium">${step(top[1], 'p2', '🥈')}${step(top[0], 'p1', '🥇')}${step(top[2], 'p3', '🥉')}</div>
-      <div class="scoreboard">${top.slice(3).map((p, i) => `
-        <div class="score-row"><span class="place">${i + 4}.</span><span class="name">${esc(p.name)}</span><span class="pts">${p.score}</span></div>`).join('')}
-      </div>`;
+// ---------- Przedmiot: wybór klasy i tematu ----------
+function renderSubject(subjectId, grade) {
+  const s = findSubject(subjectId);
+  const grades = gradesOf(s);
+  if (!grades.includes(grade)) {
+    const remembered = load(STORE_GRADE, null);
+    grade = grades.includes(remembered) ? remembered : grades[0];
   } else {
-    const p = players[0];
-    const good = p.answers.filter(a => a.correct).length;
-    const pct = Math.round(good / questions.length * 100);
-    const msg = pct === 100 ? 'Perfekcyjnie! 🎉' : pct >= 75 ? 'Świetna robota! 💪' : pct >= 50 ? 'Nieźle, jeszcze trochę praktyki!' : 'Powtórz materiał i spróbuj znowu 📖';
-    head = `
-      <h1 class="logo">${msg}</h1>
-      <div class="stats">
-        <div class="stat"><div class="v">${p.score}</div><div class="l">punktów</div></div>
-        <div class="stat"><div class="v">${good} / ${questions.length}</div><div class="l">poprawnych (${pct}%)</div></div>
-        <div class="stat"><div class="v">🔥 ${p.bestStreak}</div><div class="l">najdłuższa seria</div></div>
-      </div>`;
+    save(STORE_GRADE, grade);
   }
-
-  const wrongQs = questions.filter((_, i) => players.some(p => !p.answers[i].correct));
-  const review = questions.map((q, i) => {
-    const anyWrong = players.some(p => !p.answers[i].correct);
-    const who = players.map(p => {
-      const a = p.answers[i];
-      const txt = a.choice === null ? 'brak odpowiedzi' : esc(q.a[a.choice]);
-      return `${multi() ? esc(p.name) + ': ' : 'Twoja odpowiedź: '}${a.correct ? '✔' : '✘'} ${txt}`;
-    }).join('<br>');
-    return `<div class="review-item ${anyWrong ? 'wrong' : ''}">
-      <div class="q">${i + 1}. ${esc(q.q)}</div>
-      <div class="a">Poprawna: <b>${esc(q.a[q.c])}</b><br>${who}</div>
-    </div>`;
-  }).join('');
+  const progress = load(STORE_PROGRESS, {});
+  const topics = s.grades[grade];
 
   app.innerHTML = `
-    ${head}
-    <div class="row center" style="margin:24px 0">
-      <button id="home">🏠 Menu</button>
-      <button id="again">🔄 Zagraj ponownie</button>
-      ${wrongQs.length ? `<button class="primary" id="retry">📖 Powtórz błędne (${wrongQs.length})</button>` : ''}
+    <nav class="crumbs"><a href="#/">← Przedmioty</a></nav>
+    <div class="subject-head" style="--c:${s.color}">
+      <span class="emoji">${s.emoji}</span>
+      <h1>${esc(s.name)}</h1>
     </div>
-    <h2 class="section-title">Omówienie odpowiedzi</h2>
-    ${review}`;
+    <div class="grade-tabs" role="tablist">
+      ${grades.map(g => `<a role="tab" aria-selected="${g === grade}" class="${g === grade ? 'active' : ''}" href="#/przedmiot/${s.id}/${g}" style="--c:${s.color}">Klasa ${g}</a>`).join('')}
+    </div>
+    <div class="topics">
+      ${topics.map(t => {
+        const p = progress[progressKey(s.id, grade, t.id)];
+        return `
+          <div class="topic">
+            <div class="topic-info">
+              <h3>${esc(t.name)}</h3>
+              <div class="meta">
+                ${t.gen ? '♾️ zadania bez końca' : `${t.questions.length} pytań w bazie`}
+                ${p ? ` · najlepiej ${p.best}% · ${p.plays}× ukończona` : ' · jeszcze nie ćwiczone'}
+              </div>
+            </div>
+            <div class="stars" title="${p ? p.stars : 0} z 3 gwiazdek">${starsHtml(p ? p.stars : 0)}</div>
+            <a class="btn primary" href="#/lekcja/${s.id}/${grade}/${t.id}" style="--c:${s.color}">${p ? 'Ćwicz dalej' : 'Rozpocznij lekcję'}</a>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
 
-  app.querySelector('#home').onclick = renderHome;
-  app.querySelector('#again').onclick = () => renderSetup(quiz.id);
-  const retry = app.querySelector('#retry');
-  if (retry) retry.onclick = () => {
-    startGame(quiz, players.map(p => p.name), prepareShuffled(wrongQs));
-    game.isRetry = true;
+// ---------- Lekcja ----------
+let lesson = null;
+
+function startLesson(subjectId, grade, topic, onlyQuestions) {
+  const bank = onlyQuestions || topic.questions;
+  lesson = {
+    subject: findSubject(subjectId),
+    grade,
+    topic,
+    bank,
+    retry: !!onlyQuestions,
+    total: topic.gen && !onlyQuestions ? 10 : Math.min(8, bank.length),
+    used: new Set(),
+    level: onlyQuestions ? 2 : 1,
+    streak: 0,
+    maxLevel: 1,
+    points: 0,
+    history: []
   };
+  nextQuestion();
+}
+
+function pickQuestion() {
+  const L = lesson;
+  if (L.topic.gen && !L.retry) {
+    // Generator: kilka prób, żeby nie trafić dwa razy na to samo pytanie
+    for (let i = 0; i < 10; i++) {
+      const q = { ...L.topic.gen(L.level), l: L.level };
+      if (!L.used.has(q.q)) { L.used.add(q.q); return q; }
+    }
+    return { ...L.topic.gen(L.level), l: L.level };
+  }
+  let pool = L.bank.filter(q => !L.used.has(q));
+  if (!pool.length) { L.used.clear(); pool = L.bank; }
+  const dist = q => Math.abs((q.l || 1) - L.level);
+  const best = Math.min(...pool.map(dist));
+  const q = shuffle(pool.filter(q => dist(q) === best))[0];
+  L.used.add(q);
+  return q;
+}
+
+function nextQuestion() {
+  const L = lesson;
+  if (L.history.length >= L.total) return renderResults();
+  const q = pickQuestion();
+  const shown = q.o ? { ...q, options: shuffle(q.o) } : q;
+  L.current = shown;
+  renderQuestion(shown);
+}
+
+function lessonTop(answered = false) {
+  const L = lesson;
+  const n = L.history.length;
+  const shownNumber = answered ? n : Math.min(n + 1, L.total);
+  return `
+    <div class="lesson-top" style="--c:${L.subject.color}">
+      <button class="icon-btn" id="quit" title="Zakończ lekcję">✕</button>
+      <div class="progress"><div style="width:${n / L.total * 100}%"></div></div>
+      <span class="count">${shownNumber}/${L.total}</span>
+    </div>
+    <div class="lesson-meta">
+      <span>${L.subject.emoji} ${esc(L.subject.name)} · kl. ${L.grade} · ${esc(L.topic.name)}</span>
+      <span class="level lv${L.level}" title="Poziom trudności">${'●'.repeat(L.level)}${'○'.repeat(3 - L.level)} ${LEVELS[L.level]}</span>
+    </div>`;
+}
+
+function bindQuit() {
+  app.querySelector('#quit').onclick = () => {
+    if (lesson.history.length === 0 || confirm('Zakończyć lekcję? Postęp z tej lekcji nie zostanie zapisany.')) {
+      go(`#/przedmiot/${lesson.subject.id}/${lesson.grade}`);
+    }
+  };
+}
+
+function renderQuestion(q) {
+  app.innerHTML = `
+    ${lessonTop()}
+    <div class="card question">${esc(q.q)}</div>
+    ${q.options ? `
+      <div class="options">
+        ${q.options.map((o, i) => `<button class="option" data-i="${i}"><span class="letter">${LETTERS[i]}</span><span>${esc(o)}</span></button>`).join('')}
+      </div>
+      <p class="hint">Możesz też nacisnąć klawisz ${q.options.map((_, i) => i + 1).join(', ')}</p>`
+    : `
+      <form class="typed" autocomplete="off">
+        <input type="text" id="answer" placeholder="Wpisz odpowiedź…" autocapitalize="off" spellcheck="false" aria-label="Twoja odpowiedź">
+        <button type="submit" class="btn primary" style="--c:${lesson.subject.color}">Sprawdź</button>
+      </form>
+      <p class="hint">Liczby możesz wpisać z przecinkiem (2,5), a ułamki ze skośnikiem (3/4)</p>`}
+  `;
+  bindQuit();
+
+  if (q.options) {
+    const answer = i => {
+      setKeys(null);
+      const chosen = q.options[i];
+      finishQuestion(chosen === q.o[0] ? 'ok' : 'bad', chosen, q.o[0]);
+    };
+    app.querySelectorAll('.option').forEach(b => b.onclick = () => answer(+b.dataset.i));
+    setKeys(e => {
+      const n = +e.key;
+      if (n >= 1 && n <= q.options.length) answer(n - 1);
+    });
+  } else {
+    const input = app.querySelector('#answer');
+    input.focus();
+    app.querySelector('form').onsubmit = e => {
+      e.preventDefault();
+      if (!input.value.trim()) return input.focus();
+      finishQuestion(checkTyped(input.value, q.t), input.value.trim(), q.t[0]);
+    };
+  }
+}
+
+function finishQuestion(result, given, correctAnswer) {
+  const L = lesson;
+  const q = L.current;
+  const ok = result !== 'bad';
+  const levelBefore = L.level;
+  let levelMsg = '';
+
+  if (ok) {
+    L.points += 10 * L.level;
+    L.streak++;
+    if (L.streak >= 2 && L.level < 3) {
+      L.level++;
+      L.streak = 0;
+      levelMsg = '🔼 Świetnie idzie — poziom w górę!';
+    }
+  } else {
+    L.streak = 0;
+    if (L.level > 1) {
+      L.level--;
+      levelMsg = '🔽 Spokojnie — następne pytanie będzie łatwiejsze.';
+    }
+  }
+  L.maxLevel = Math.max(L.maxLevel, L.level);
+  L.history.push({ q, ok, given, correctAnswer, level: levelBefore });
+
+  const header = ok
+    ? `<div class="big">✔ ${pickPraise()}</div><div class="pts">+${10 * levelBefore} pkt</div>`
+    : `<div class="big">✘ Niestety, źle</div>
+       <div class="correct">Poprawna odpowiedź: <b>${esc(correctAnswer)}</b></div>
+       ${q.t ? `<div class="yours">Twoja odpowiedź: ${esc(given)}</div>` : ''}`;
+
+  app.innerHTML = `
+    ${lessonTop(true)}
+    <div class="card question small">${esc(q.q)}</div>
+    ${q.options ? `
+      <div class="options answered">
+        ${q.options.map((o, i) => `<div class="option ${o === correctAnswer ? 'right' : o === given ? 'wrong' : 'dim'}"><span class="letter">${LETTERS[i]}</span><span>${esc(o)}</span></div>`).join('')}
+      </div>` : ''}
+    <div class="feedback ${ok ? 'ok' : 'bad'}">
+      ${header}
+      ${result === 'ok-diacritics' ? '<div class="note">Uważaj na polskie znaki: poprawnie <b>' + esc(correctAnswer) + '</b></div>' : ''}
+      ${q.e ? `<div class="explain"><span>💡</span><div>${esc(q.e)}</div></div>` : ''}
+      ${levelMsg ? `<div class="level-msg">${levelMsg}</div>` : ''}
+    </div>
+    <div class="row center"><button class="btn primary big-btn" id="next" style="--c:${L.subject.color}">${L.history.length >= L.total ? 'Zobacz wynik' : 'Dalej →'}</button></div>`;
+
+  bindQuit();
+  const next = app.querySelector('#next');
+  next.onclick = nextQuestion;
+  // Enter w polu tekstowym właśnie wysłał odpowiedź — przycisk „Dalej” łapie dopiero kolejne naciśnięcie
+  setTimeout(() => next.focus(), 0);
+}
+
+function pickPraise() {
+  const list = ['Dobrze!', 'Brawo!', 'Świetnie!', 'Tak jest!', 'Super!', 'Znakomicie!'];
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+// ---------- Wynik ----------
+function renderResults() {
+  setKeys(null);
+  const L = lesson;
+  const good = L.history.filter(h => h.ok).length;
+  const pct = Math.round(good / L.history.length * 100);
+  const stars = pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 50 ? 1 : 0;
+  const mistakes = L.history.filter(h => !h.ok);
+
+  if (!L.retry) {
+    const all = load(STORE_PROGRESS, {});
+    const key = progressKey(L.subject.id, L.grade, L.topic.id);
+    const prev = all[key] || { stars: 0, best: 0, plays: 0, maxLevel: 1 };
+    all[key] = {
+      stars: Math.max(prev.stars, stars),
+      best: Math.max(prev.best, pct),
+      plays: prev.plays + 1,
+      maxLevel: Math.max(prev.maxLevel, L.maxLevel)
+    };
+    save(STORE_PROGRESS, all);
+  }
+
+  const msg = pct === 100 ? 'Perfekcyjnie! 🎉' : pct >= 70 ? 'Świetna robota! 💪' : pct >= 50 ? 'Dobrze, ćwicz dalej! 👍' : 'Warto powtórzyć ten temat 📖';
+  const topics = L.subject.grades[L.grade];
+  const nextTopic = topics[topics.indexOf(L.topic) + 1];
+
+  app.innerHTML = `
+    <div class="results" style="--c:${L.subject.color}">
+      <div class="big-stars">${starsHtml(stars)}</div>
+      <h1>${msg}</h1>
+      <p class="sub">${L.subject.emoji} ${esc(L.subject.name)} · klasa ${L.grade} · ${esc(L.topic.name)}${L.retry ? ' · powtórka błędów' : ''}</p>
+      <div class="stats">
+        <div class="stat"><div class="v">${good}/${L.history.length}</div><div class="l">poprawnych (${pct}%)</div></div>
+        <div class="stat"><div class="v">${L.points}</div><div class="l">punktów</div></div>
+        <div class="stat"><div class="v">${LEVELS[L.maxLevel]}</div><div class="l">najwyższy poziom</div></div>
+      </div>
+      <div class="row center">
+        ${mistakes.length ? `<button class="btn primary" id="retry" style="--c:${L.subject.color}">📖 Powtórz błędy (${mistakes.length})</button>` : ''}
+        <button class="btn" id="again">🔄 Jeszcze raz</button>
+        ${nextTopic ? `<a class="btn" href="#/lekcja/${L.subject.id}/${L.grade}/${nextTopic.id}">Następny temat →</a>` : ''}
+        <a class="btn" href="#/przedmiot/${L.subject.id}/${L.grade}">Lista tematów</a>
+      </div>
+    </div>
+    ${mistakes.length ? `
+      <h2 class="section-title">Czego się nauczyć</h2>
+      ${mistakes.map(h => `
+        <div class="review">
+          <div class="q">${esc(h.q.q)}</div>
+          <div class="a">Twoja odpowiedź: <s>${esc(h.given)}</s> · Poprawna: <b>${esc(h.correctAnswer)}</b></div>
+          ${h.q.e ? `<div class="e">💡 ${esc(h.q.e)}</div>` : ''}
+        </div>`).join('')}` : ''}`;
+
+  const retry = app.querySelector('#retry');
+  if (retry) retry.onclick = () => startLesson(L.subject.id, L.grade, L.topic, mistakes.map(h => h.q));
+  app.querySelector('#again').onclick = () => startLesson(L.subject.id, L.grade, L.topic);
   window.scrollTo(0, 0);
 }
 
-renderHome();
+route();
