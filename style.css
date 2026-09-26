@@ -89,6 +89,8 @@ a { color: inherit; }
 .grade-tabs a.active { background: #fff; color: var(--text); box-shadow: inset 0 -4px 0 var(--c); }
 
 .topics { display: flex; flex-direction: column; gap: 12px; }
+.group-title { font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; opacity: .8; margin: 14px 0 0; }
+.group-title:first-child { margin-top: 0; }
 .topic {
   display: flex; align-items: center; gap: 16px;
   background: var(--card); color: var(--text);

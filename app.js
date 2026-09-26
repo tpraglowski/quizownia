@@ -133,9 +133,10 @@ function renderSubject(subjectId, grade) {
       ${grades.map(g => `<a role="tab" aria-selected="${g === grade}" class="${g === grade ? 'active' : ''}" href="#/przedmiot/${s.id}/${g}" style="--c:${s.color}">Klasa ${g}</a>`).join('')}
     </div>
     <div class="topics">
-      ${topics.map(t => {
+      ${topics.map((t, i) => {
         const p = progress[progressKey(s.id, grade, t.id)];
-        return `
+        const header = t.group && t.group !== topics[i - 1]?.group ? `<h2 class="group-title">${esc(t.group)}</h2>` : "";
+        return header + `
           <div class="topic">
             <div class="topic-info">
               <h3>${esc(t.name)}</h3>
