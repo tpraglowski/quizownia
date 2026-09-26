@@ -305,7 +305,7 @@ function finishQuestion(result, given, correctAnswer) {
       </div>` : ''}
     <div class="feedback ${ok ? 'ok' : 'bad'}">
       ${header}
-      ${result === 'ok-diacritics' ? '<div class="note">Uważaj na polskie znaki: poprawnie <b>' + esc(correctAnswer) + '</b></div>' : ''}
+      ${result === 'ok-diacritics' ? '<div class="note">Uważaj na znaki (ą, ł, á, ñ…): poprawnie <b>' + esc(correctAnswer) + '</b></div>' : ''}
       ${q.e ? `<div class="explain"><span>💡</span><div>${esc(q.e)}</div></div>` : ''}
       ${levelMsg ? `<div class="level-msg">${levelMsg}</div>` : ''}
     </div>
