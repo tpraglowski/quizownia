@@ -81,27 +81,115 @@ SUBJECTS.push({
       ] }
     ],
     7: [
-      { id: 'krazenie-oddychanie', name: 'Krążenie i oddychanie', questions: [
-        { l: 1, q: 'Który narząd pompuje krew?', t: ['serce'], e: 'Serce to mięsień pompujący krew do całego ciała.' },
-        { l: 1, q: 'Jaki gaz pobieramy przy wdechu?', o: ['tlen', 'dwutlenek węgla', 'azot', 'wodór'], e: 'Pobieramy tlen, a wydychamy więcej dwutlenku węgla.' },
-        { l: 1, q: 'W jakim narządzie zachodzi wymiana gazowa?', o: ['w płucach', 'w sercu', 'w żołądku', 'w wątrobie'], e: 'W pęcherzykach płucnych tlen przechodzi do krwi.' },
-        { l: 2, q: 'Ile jam (komór i przedsionków razem) ma serce człowieka?', t: ['4', 'cztery'], e: 'Serce ma 2 przedsionki i 2 komory.' },
-        { l: 2, q: 'Które naczynia wynoszą krew z serca?', o: ['tętnice', 'żyły', 'naczynia włosowate', 'nerwy'], e: 'Tętnice wynoszą krew z serca, żyły wprowadzają ją do serca.' },
-        { l: 2, q: 'Które krwinki przenoszą tlen?', o: ['czerwone (erytrocyty)', 'białe (leukocyty)', 'płytki krwi', 'osocze'], e: 'Erytrocyty zawierają hemoglobinę, która wiąże tlen.' },
-        { l: 3, q: 'Jak nazywa się mięsień oddzielający klatkę piersiową od jamy brzusznej?', t: ['przepona'], e: 'Skurcz przepony powoduje wdech.' },
-        { l: 3, q: 'Za co odpowiadają płytki krwi?', o: ['krzepnięcie krwi', 'transport tlenu', 'walkę z bakteriami', 'trawienie'], e: 'Płytki krwi (trombocyty) tamują krwawienie.' },
-        { l: 3, q: 'Która komora serca pompuje krew do całego ciała?', o: ['lewa', 'prawa', 'obie po równo', 'żadna — robią to przedsionki'], e: 'Lewa komora ma najgrubszą ścianę i tłoczy krew do aorty.' }
+      { id: 'skora', name: 'Skóra', questions: [
+        { l: 1, q: 'Jaki jest największy narząd człowieka?', t: ['skóra'], e: 'Skóra ma u dorosłego ok. 1,5–2 m² powierzchni.' },
+        { l: 1, q: 'Jaki barwnik nadaje kolor skórze i chroni przed promieniowaniem UV?', o: ['melanina', 'hemoglobina', 'chlorofil', 'keratyna'], e: 'Melanina powstaje w naskórku — dlatego opalamy się na słońcu.' },
+        { l: 1, q: 'Które gruczoły skóry pomagają ochłodzić ciało?', o: ['potowe', 'łojowe', 'ślinowe', 'mlekowe'], e: 'Pot paruje z powierzchni skóry i odbiera ciału ciepło.' },
+        { l: 2, q: 'Która z wymienionych NIE jest funkcją skóry?', o: ['wytwarzanie żółci', 'ochrona przed drobnoustrojami', 'regulacja temperatury ciała', 'odbieranie bodźców (dotyk, ciepło, ból)'], e: 'Żółć wytwarza wątroba. Skóra chroni, reguluje temperaturę, odbiera bodźce i wydala pot.' },
+        { l: 2, q: 'Jak nazywa się zewnętrzna warstwa skóry?', t: ['naskórek'], e: 'Naskórek stale się złuszcza i odnawia.' },
+        { l: 2, q: 'Jaka witamina powstaje w skórze pod wpływem słońca?', t: ['d', 'witamina d', 'witaminy d'], e: 'Witamina D jest potrzebna do budowy kości.' },
+        { l: 3, q: 'Jaka jest kolejność warstw skóry od zewnątrz?', o: ['naskórek → skóra właściwa → tkanka podskórna', 'skóra właściwa → naskórek → tkanka podskórna', 'tkanka podskórna → naskórek → skóra właściwa', 'naskórek → tkanka podskórna → skóra właściwa'], e: 'W skórze właściwej są naczynia, gruczoły i receptory, a w tkance podskórnej — tłuszcz.' },
+        { l: 3, q: 'Co dzieje się z naczyniami krwionośnymi skóry, gdy jest nam gorąco?', o: ['rozszerzają się i oddają więcej ciepła', 'zwężają się, żeby zatrzymać ciepło', 'zamykają się całkowicie', 'nic się nie zmienia'], e: 'Rozszerzone naczynia sprawiają, że skóra się czerwieni i szybciej traci ciepło.' },
+        { l: 3, q: 'Oparzenie z pęcherzami wypełnionymi płynem to oparzenie:', o: ['II stopnia', 'I stopnia', 'III stopnia', 'IV stopnia'], e: 'I stopień: zaczerwienienie; II: pęcherze; III: zniszczenie wszystkich warstw skóry.' }
       ] },
-      { id: 'trawienie', name: 'Trawienie i odżywianie', questions: [
+      { id: 'uklad-ruchu', name: 'Układ ruchu', questions: [
+        { l: 1, q: 'Ile kości ma szkielet dorosłego człowieka?', o: ['ok. 206', 'ok. 106', 'ok. 306', 'ok. 50'], e: 'Dorosły ma ok. 206 kości; noworodek więcej, bo część później się zrasta.' },
+        { l: 1, q: 'Jak nazywa się ruchome połączenie kości, np. w kolanie?', t: ['staw'], e: 'Staw łączy kości ruchomo — np. kolanowy, łokciowy, biodrowy.' },
+        { l: 1, q: 'Która kość jest najdłuższa w ciele człowieka?', o: ['kość udowa', 'kość ramienna', 'żebro', 'kość piszczelowa'], e: 'Kość udowa jest najdłuższa i jedna z najmocniejszych.' },
+        { l: 2, q: 'Czym mięśnie szkieletowe są przyczepione do kości?', t: ['ścięgna', 'ścięgnami', 'ścięgno'], e: 'Ścięgna przenoszą siłę skurczu mięśnia na kość.' },
+        { l: 2, q: 'Z ilu odcinków składa się kręgosłup?', t: ['5', 'pięciu', 'pięć'], e: 'Odcinki: szyjny, piersiowy, lędźwiowy, krzyżowy i guziczny.' },
+        { l: 2, q: 'Który mięsień kurczy się niezależnie od naszej woli i pracuje całe życie bez odpoczynku?', o: ['mięsień sercowy', 'mięsień szkieletowy', 'biceps', 'mięsień czworogłowy uda'], e: 'Tkanki mięśniowe: szkieletowa (zależna od woli), gładka i sercowa (niezależne od woli).' },
+        { l: 3, q: 'Co nadaje kościom twardość?', o: ['sole mineralne, głównie wapnia', 'woda', 'tłuszcz', 'szpik kostny'], e: 'Sole mineralne dają twardość, a związki organiczne (osseina) — elastyczność.' },
+        { l: 3, q: 'Co powstaje w czerwonym szpiku kostnym?', o: ['krwinki', 'hormony', 'enzymy trawienne', 'ścięgna'], e: 'Czerwony szpik wytwarza krwinki czerwone, białe i płytki krwi.' },
+        { l: 3, q: 'Który mięsień prostuje rękę w stawie łokciowym?', o: ['trójgłowy ramienia (triceps)', 'dwugłowy ramienia (biceps)', 'mięsień sercowy', 'mięsień naramienny'], e: 'Biceps zgina, triceps prostuje — działają antagonistycznie (przeciwstawnie).' }
+      ] },
+      { id: 'uklad-krazenia', name: 'Układ krążenia', questions: [
+        { l: 1, q: 'Który narząd pompuje krew?', t: ['serce'], e: 'Serce to mięsień pompujący krew do całego ciała.' },
+        { l: 1, q: 'Które naczynia wynoszą krew z serca?', o: ['tętnice', 'żyły', 'naczynia włosowate', 'nerwy'], e: 'Tętnice wynoszą krew z serca, żyły wprowadzają ją do serca.' },
+        { l: 1, q: 'Które krwinki przenoszą tlen?', o: ['czerwone (erytrocyty)', 'białe (leukocyty)', 'płytki krwi', 'osocze'], e: 'Erytrocyty zawierają hemoglobinę, która wiąże tlen.' },
+        { l: 2, q: 'Ile jam (komór i przedsionków razem) ma serce człowieka?', t: ['4', 'cztery'], e: 'Serce ma 2 przedsionki i 2 komory.' },
+        { l: 2, q: 'Jak nazywa się białko w krwinkach czerwonych, które wiąże tlen?', t: ['hemoglobina'], e: 'Hemoglobina zawiera żelazo i nadaje krwi czerwony kolor.' },
+        { l: 2, q: 'Za co odpowiadają płytki krwi?', o: ['krzepnięcie krwi', 'transport tlenu', 'walkę z bakteriami', 'trawienie'], e: 'Płytki krwi (trombocyty) tamują krwawienie.' },
+        { l: 3, q: 'Która komora serca pompuje krew do całego ciała?', o: ['lewa', 'prawa', 'obie po równo', 'żadna — robią to przedsionki'], e: 'Lewa komora ma najgrubszą ścianę i tłoczy krew do aorty.' },
+        { l: 3, q: 'Dokąd płynie krew w małym (płucnym) obiegu?', o: ['z serca do płuc i z powrotem do serca', 'z serca do całego ciała', 'z płuc do nerek', 'z wątroby do jelit'], e: 'W płucach krew oddaje CO₂ i pobiera tlen, a potem wraca do lewego przedsionka.' },
+        { l: 3, q: 'Która grupa krwi to „uniwersalny dawca”?', o: ['0 Rh−', 'AB Rh+', 'A Rh+', 'B Rh−'], e: 'Krew 0 Rh− można w nagłych przypadkach przetoczyć osobom z każdą grupą.' }
+      ] },
+      { id: 'uklad-odpornosciowy', name: 'Układ odpornościowy', questions: [
+        { l: 1, q: 'Które krwinki bronią organizm przed drobnoustrojami?', o: ['białe (leukocyty)', 'czerwone (erytrocyty)', 'płytki krwi', 'żadne'], e: 'Leukocyty rozpoznają i niszczą bakterie oraz wirusy.' },
+        { l: 1, q: 'Co zawiera szczepionka?', o: ['osłabione lub zabite drobnoustroje albo ich fragmenty', 'gotowe antybiotyki', 'witaminy', 'krwinki czerwone'], e: 'Szczepionka „uczy” organizm rozpoznawać zarazek, zanim naprawdę zachorujemy.' },
+        { l: 1, q: 'Jak nazywa się lek zwalczający infekcje bakteryjne?', t: ['antybiotyk', 'antybiotyki'], e: 'Antybiotyki działają na bakterie — pierwszym była penicylina.' },
+        { l: 2, q: 'Który narząd należy do układu odpornościowego?', o: ['śledziona', 'trzustka', 'nerka', 'żołądek'], e: 'Do układu odpornościowego należą m.in. śledziona, grasica, węzły chłonne i migdałki.' },
+        { l: 2, q: 'Jak nazywają się białka wytwarzane przez limfocyty, które unieszkodliwiają antygeny?', t: ['przeciwciała', 'przeciwciało'], e: 'Przeciwciała łączą się z antygenami drobnoustrojów i pomagają je zniszczyć.' },
+        { l: 2, q: 'Na co NIE działają antybiotyki?', o: ['na wirusy', 'na bakterie', 'na paciorkowce', 'na gronkowce'], e: 'Grypy i przeziębienia (wirusy) nie leczy się antybiotykami.' },
+        { l: 3, q: 'Jaki rodzaj odporności uzyskujemy po szczepieniu?', o: ['sztuczną czynną', 'naturalną czynną', 'naturalną bierną', 'sztuczną bierną'], e: 'Sztuczna — bo dzięki szczepionce; czynna — bo organizm sam wytwarza przeciwciała.' },
+        { l: 3, q: 'Wirus HIV niszczy limfocyty i może wywołać chorobę o nazwie:', t: ['aids'], e: 'AIDS to zespół nabytego niedoboru odporności.' },
+        { l: 3, q: 'Czym jest alergia?', o: ['nadmierną reakcją układu odpornościowego na nieszkodliwe substancje', 'brakiem białych krwinek', 'chorobą bakteryjną', 'niedoborem witamin'], e: 'Alergeny to np. pyłki, sierść czy roztocza.' }
+      ] },
+      { id: 'uklad-pokarmowy', name: 'Układ pokarmowy', questions: [
         { l: 1, q: 'Gdzie zaczyna się trawienie?', o: ['w jamie ustnej', 'w żołądku', 'w jelicie grubym', 'w wątrobie'], e: 'Już w ustach ślina zaczyna trawić skrobię.' },
         { l: 1, q: 'Który składnik pokarmu jest głównym budulcem ciała?', o: ['białka', 'cukry', 'tłuszcze', 'woda'], e: 'Białka budują mięśnie i inne tkanki.' },
         { l: 1, q: 'Jak nazywa się przewód łączący gardło z żołądkiem?', t: ['przełyk'], e: 'Przełyk przesuwa pokarm do żołądka.' },
         { l: 2, q: 'Gdzie wchłania się najwięcej składników pokarmowych?', o: ['w jelicie cienkim', 'w żołądku', 'w jelicie grubym', 'w przełyku'], e: 'Jelito cienkie ma kosmki jelitowe, przez które składniki trafiają do krwi.' },
-        { l: 2, q: 'Który narząd wytwarza żółć?', t: ['wątroba'], e: 'Żółć z wątroby rozdrabnia tłuszcze.' },
+        { l: 2, q: 'Który narząd wytwarza żółć?', t: ['wątroba'], e: 'Żółć z wątroby rozdrabnia (emulguje) tłuszcze.' },
         { l: 2, q: 'Brak witaminy D u dzieci może powodować:', o: ['krzywicę', 'szkorbut', 'kurzą ślepotę', 'anemię'], e: 'Witamina D jest potrzebna do budowy kości.' },
-        { l: 3, q: 'Jak nazywa się enzym w ślinie trawiący skrobię?', o: ['amylaza', 'pepsyna', 'lipaza', 'insulina'], e: 'Amylaza ślinowa rozkłada skrobię.' },
+        { l: 3, q: 'Jak nazywa się enzym w ślinie trawiący skrobię?', o: ['amylaza', 'pepsyna', 'lipaza', 'insulina'], e: 'Amylaza ślinowa rozkłada skrobię. Pepsyna trawi białka w żołądku, lipaza — tłuszcze.' },
         { l: 3, q: 'Brak której witaminy powoduje szkorbut?', t: ['c', 'witamina c', 'witaminy c'], e: 'Witamina C — jej źródłem są m.in. owoce cytrusowe i papryka.' },
         { l: 3, q: 'Jaką rolę pełni jelito grube?', o: ['wchłania wodę i formuje kał', 'trawi białka', 'wytwarza żółć', 'rozkłada skrobię'], e: 'W jelicie grubym wchłania się woda, a żyjące tam bakterie wytwarzają niektóre witaminy.' }
+      ] },
+      { id: 'uklad-wydalniczy', name: 'Układ wydalniczy', questions: [
+        { l: 1, q: 'Jakie narządy oczyszczają krew i wytwarzają mocz?', t: ['nerki', 'nerka'], e: 'Nerki filtrują krew i usuwają z niej zbędne substancje.' },
+        { l: 1, q: 'Gdzie gromadzi się mocz przed wydaleniem?', o: ['w pęcherzu moczowym', 'w nerkach', 'w żołądku', 'w jelicie grubym'], e: 'Pęcherz moczowy magazynuje mocz.' },
+        { l: 1, q: 'Ile nerek ma zdrowy człowiek?', t: ['2', 'dwie'], e: 'Nerki leżą po obu stronach kręgosłupa, w okolicy lędźwiowej.' },
+        { l: 2, q: 'Jaki szkodliwy związek, powstający z rozkładu białek, jest usuwany z moczem?', t: ['mocznik'], e: 'Mocznik powstaje w wątrobie i jest wydalany przez nerki.' },
+        { l: 2, q: 'Jak nazywają się przewody prowadzące mocz z nerek do pęcherza?', o: ['moczowody', 'cewka moczowa', 'jajowody', 'tętnice nerkowe'], e: 'Moczowody prowadzą mocz do pęcherza, a cewka moczowa — na zewnątrz.' },
+        { l: 2, q: 'Jak nazywa się podstawowa jednostka nerki, w której filtruje się krew?', t: ['nefron'], e: 'Każda nerka ma ok. miliona nefronów.' },
+        { l: 3, q: 'Które narządy oprócz nerek biorą udział w wydalaniu?', o: ['płuca (CO₂) i skóra (pot)', 'serce i mózg', 'żołądek i przełyk', 'kości i mięśnie'], e: 'Płuca usuwają dwutlenek węgla, a skóra — wodę i sole z potem.' },
+        { l: 3, q: 'Jak nazywa się zabieg oczyszczania krwi przy niewydolności nerek („sztuczna nerka”)?', o: ['dializa', 'transfuzja', 'szczepienie', 'biopsja'], e: 'Podczas dializy krew przepływa przez urządzenie, które ją filtruje.' },
+        { l: 3, q: 'Ile moczu wydala w przybliżeniu dorosły człowiek w ciągu doby?', o: ['ok. 1,5 litra', 'ok. 0,1 litra', 'ok. 10 litrów', 'ok. 50 litrów'], e: 'Nerki filtrują ok. 180 l krwi na dobę, ale większość wody wraca do krwi.' }
+      ] },
+      { id: 'uklad-hormonalny', name: 'Układ hormonalny', questions: [
+        { l: 1, q: 'Jaki hormon obniża poziom cukru (glukozy) we krwi?', t: ['insulina'], e: 'Insulina umożliwia komórkom pobieranie glukozy z krwi.' },
+        { l: 1, q: 'Który narząd wytwarza insulinę?', o: ['trzustka', 'wątroba', 'tarczyca', 'nerka'], e: 'Insulinę wytwarzają wyspy trzustkowe (Langerhansa).' },
+        { l: 1, q: 'Czym hormony są transportowane po organizmie?', o: ['z krwią', 'nerwami', 'przez skórę', 'przez przewód pokarmowy'], e: 'Gruczoły dokrewne wydzielają hormony prosto do krwi.' },
+        { l: 2, q: 'Który gruczoł nazywa się „nadrzędnym”, bo kieruje pracą innych gruczołów?', o: ['przysadka mózgowa', 'tarczyca', 'nadnercza', 'grasica'], e: 'Przysadka wydziela m.in. hormon wzrostu i hormony sterujące innymi gruczołami.' },
+        { l: 2, q: 'Jak nazywa się hormon stresu z nadnerczy, przygotowujący do „walki lub ucieczki”?', t: ['adrenalina'], e: 'Adrenalina przyspiesza pracę serca i oddech.' },
+        { l: 2, q: 'Jak nazywa się choroba spowodowana niedoborem insuliny?', t: ['cukrzyca'], e: 'W cukrzycy poziom glukozy we krwi jest zbyt wysoki.' },
+        { l: 3, q: 'Jaki pierwiastek jest potrzebny tarczycy do wytwarzania hormonów?', o: ['jod', 'żelazo', 'wapń', 'sód'], e: 'Dlatego sól kuchenna jest jodowana.' },
+        { l: 3, q: 'Nadmiar hormonu wzrostu w dzieciństwie powoduje:', o: ['gigantyzm', 'karłowatość', 'cukrzycę', 'krzywicę'], e: 'Niedobór hormonu wzrostu powoduje karłowatość, nadmiar — gigantyzm.' },
+        { l: 3, q: 'Jak działa glukagon?', o: ['podwyższa poziom glukozy we krwi', 'obniża poziom glukozy we krwi', 'przyspiesza wzrost kości', 'reguluje ilość wapnia'], e: 'Glukagon i insulina działają przeciwstawnie — razem utrzymują stały poziom cukru.' }
+      ] },
+      { id: 'uklad-nerwowy-zmysly', name: 'Układ nerwowy i narządy zmysłów', questions: [
+        { l: 1, q: 'Jaki jest najważniejszy narząd układu nerwowego?', t: ['mózg', 'mózgowie'], e: 'Mózgowie steruje pracą całego organizmu.' },
+        { l: 1, q: 'Jak nazywa się komórka nerwowa?', t: ['neuron'], e: 'Neuron przewodzi impulsy nerwowe.' },
+        { l: 1, q: 'Jaki zmysł, oprócz słuchu, ma swój narząd w uchu wewnętrznym?', o: ['równowaga', 'węch', 'smak', 'dotyk'], e: 'W uchu wewnętrznym jest narząd równowagi (błędnik).' },
+        { l: 2, q: 'Jak nazywa się szybka, automatyczna reakcja, np. cofnięcie ręki od gorącego garnka?', o: ['odruch', 'nawyk', 'hormon', 'instynkt społeczny'], e: 'Odruch bezwarunkowy przebiega przez łuk odruchowy, bez udziału świadomości.' },
+        { l: 2, q: 'W której części oka znajdują się komórki odbierające światło?', o: ['w siatkówce', 'w rogówce', 'w tęczówce', 'w soczewce'], e: 'Siatkówka zawiera fotoreceptory: pręciki i czopki.' },
+        { l: 2, q: 'Co tworzy ośrodkowy układ nerwowy?', o: ['mózgowie i rdzeń kręgowy', 'nerwy i zwoje', 'oczy i uszy', 'serce i naczynia'], e: 'Nerwy wychodzące z mózgowia i rdzenia tworzą obwodowy układ nerwowy.' },
+        { l: 3, q: 'Jakimi soczewkami koryguje się krótkowzroczność?', o: ['rozpraszającymi (wklęsłymi)', 'skupiającymi (wypukłymi)', 'płaskimi', 'kolorowymi'], e: 'U krótkowidza obraz powstaje przed siatkówką — soczewka rozpraszająca go przesuwa.' },
+        { l: 3, q: 'Która część mózgowia odpowiada za równowagę i koordynację ruchów?', t: ['móżdżek'], e: 'Móżdżek pozwala np. utrzymać równowagę na rowerze.' },
+        { l: 3, q: 'Które receptory w siatkówce pozwalają widzieć barwy?', o: ['czopki', 'pręciki', 'kubki smakowe', 'ciałka dotykowe'], e: 'Czopki odpowiadają za widzenie barw, pręciki — za widzenie przy słabym świetle.' }
+      ] },
+      { id: 'uklad-rozrodczy', name: 'Układ rozrodczy', questions: [
+        { l: 1, q: 'Jak nazywa się męska komórka rozrodcza?', t: ['plemnik'], e: 'Plemniki powstają w jądrach.' },
+        { l: 1, q: 'Jak nazywają się żeńskie gruczoły płciowe, w których powstają komórki jajowe?', o: ['jajniki', 'jądra', 'macica', 'jajowody'], e: 'Jajniki wytwarzają komórki jajowe i hormony płciowe.' },
+        { l: 1, q: 'W którym narządzie rozwija się dziecko podczas ciąży?', o: ['w macicy', 'w jajniku', 'w jajowodzie', 'w pęcherzu'], e: 'Macica to narząd, w którym rozwija się zarodek, a potem płód.' },
+        { l: 2, q: 'Gdzie najczęściej dochodzi do zapłodnienia?', o: ['w jajowodzie', 'w macicy', 'w jajniku', 'w pochwie'], e: 'Zapłodniona komórka jajowa wędruje z jajowodu do macicy.' },
+        { l: 2, q: 'Jak nazywa się okres dojrzewania płciowego?', t: ['pokwitanie', 'dojrzewanie płciowe', 'dojrzewanie'], e: 'W okresie pokwitania ciało zmienia się pod wpływem hormonów płciowych.' },
+        { l: 2, q: 'Ile w przybliżeniu trwa ciąża u człowieka?', o: ['ok. 9 miesięcy (40 tygodni)', 'ok. 3 miesiące', 'ok. 12 miesięcy', 'ok. 6 miesięcy'], e: 'Ciąża trwa ok. 280 dni, czyli 40 tygodni.' },
+        { l: 3, q: 'Jak nazywa się narząd, przez który płód otrzymuje od matki tlen i pokarm?', t: ['łożysko'], e: 'Łożysko łączy się z płodem przez pępowinę.' },
+        { l: 3, q: 'Czym jest owulacja?', o: ['uwolnieniem komórki jajowej z jajnika', 'połączeniem plemnika z komórką jajową', 'złuszczeniem błony śluzowej macicy', 'porodem'], e: 'Owulacja zachodzi zwykle w połowie cyklu miesiączkowego.' },
+        { l: 3, q: 'Jak nazywa się główny męski hormon płciowy?', o: ['testosteron', 'estrogen', 'insulina', 'adrenalina'], e: 'Testosteron powstaje w jądrach; żeńskie hormony to m.in. estrogeny i progesteron.' }
+      ] },
+      { id: 'uklad-oddechowy', name: 'Układ oddechowy', questions: [
+        { l: 1, q: 'Jaki gaz pobieramy przy wdechu?', o: ['tlen', 'dwutlenek węgla', 'azot', 'wodór'], e: 'Pobieramy tlen, a wydychamy więcej dwutlenku węgla.' },
+        { l: 1, q: 'W jakim narządzie zachodzi wymiana gazowa?', o: ['w płucach', 'w sercu', 'w żołądku', 'w wątrobie'], e: 'W płucach tlen przechodzi do krwi, a dwutlenek węgla — z krwi do powietrza.' },
+        { l: 1, q: 'Dlaczego lepiej oddychać przez nos niż przez usta?', o: ['nos ogrzewa, nawilża i oczyszcza powietrze', 'przez nos wpada więcej tlenu', 'usta nie łączą się z płucami', 'nos wytwarza tlen'], e: 'Włoski i śluz w jamie nosowej zatrzymują kurz i drobnoustroje.' },
+        { l: 2, q: 'Jak nazywa się mięsień oddzielający klatkę piersiową od jamy brzusznej?', t: ['przepona'], e: 'Skurcz przepony powoduje wdech.' },
+        { l: 2, q: 'Co zamyka wejście do krtani podczas połykania?', o: ['nagłośnia', 'język', 'tchawica', 'przełyk'], e: 'Nagłośnia chroni drogi oddechowe przed zakrztuszeniem.' },
+        { l: 2, q: 'W jakich strukturach płuc zachodzi wymiana gazowa?', t: ['pęcherzyki płucne', 'pęcherzyki', 'w pęcherzykach płucnych'], e: 'Pęcherzyki płucne są oplecione naczyniami włosowatymi.' },
+        { l: 3, q: 'Jaka jest droga powietrza podczas wdechu?', o: ['jama nosowa → gardło → krtań → tchawica → oskrzela → płuca', 'jama nosowa → krtań → gardło → oskrzela → tchawica → płuca', 'jama ustna → przełyk → tchawica → płuca', 'jama nosowa → tchawica → gardło → krtań → płuca'], e: 'Z gardła powietrze trafia do krtani, tchawicy i przez oskrzela do płuc.' },
+        { l: 3, q: 'Co znajduje się w krtani i pozwala nam mówić?', o: ['struny (fałdy) głosowe', 'pęcherzyki płucne', 'nagłośnia', 'migdałki'], e: 'Drgające struny głosowe wytwarzają dźwięki.' },
+        { l: 3, q: 'Gdzie w komórce zachodzi oddychanie komórkowe (uwalnianie energii)?', o: ['w mitochondriach', 'w jądrze', 'w chloroplastach', 'w błonie komórkowej'], e: 'W mitochondriach glukoza jest rozkładana z udziałem tlenu i powstaje energia.' }
       ] }
     ],
     8: [
