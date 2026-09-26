@@ -2,7 +2,7 @@
 // o = odpowiedzi do wyboru (PIERWSZA jest poprawna, kolejność miesza się sama),
 // t = odpowiedzi do wpisania (wszystkie akceptowane warianty), e = wyjaśnienie.
 SUBJECTS.push({
-  id: 'polski', name: 'Język polski', emoji: '📖', color: '#e21b3c',
+  id: 'polski', name: 'Język polski', icon: 'ksiazka', color: '#e21b3c',
   grades: {
     4: [
       { id: 'czesci-mowy', name: 'Rzeczownik, czasownik, przymiotnik', questions: [

@@ -102,7 +102,7 @@ function renderHome() {
         }
         return `
           <a class="subject-tile" href="#/przedmiot/${s.id}" style="--c:${s.color}">
-            <span class="emoji">${s.emoji}</span>
+            <span class="subject-icon">${icon(s.icon)}</span>
             <span class="name">${esc(s.name)}</span>
             <span class="meta">${gradeRange(s)} · ★ ${stars}/${max}</span>
           </a>`;
@@ -126,7 +126,7 @@ function renderSubject(subjectId, grade) {
   app.innerHTML = `
     <nav class="crumbs"><a href="#/">← Przedmioty</a></nav>
     <div class="subject-head" style="--c:${s.color}">
-      <span class="emoji">${s.emoji}</span>
+      <span class="subject-icon">${icon(s.icon)}</span>
       <h1>${esc(s.name)}</h1>
     </div>
     <div class="grade-tabs" role="tablist">
@@ -140,7 +140,7 @@ function renderSubject(subjectId, grade) {
             <div class="topic-info">
               <h3>${esc(t.name)}</h3>
               <div class="meta">
-                ${t.gen ? '♾️ zadania bez końca' : `${t.questions.length} pytań w bazie`}
+                ${t.gen ? icon('nieskonczonosc', 'inline') + ' zadania bez końca' : `${t.questions.length} pytań w bazie`}
                 ${p ? ` · najlepiej ${p.best}% · ${p.plays}× ukończona` : ' · jeszcze nie ćwiczone'}
               </div>
             </div>
@@ -212,7 +212,7 @@ function lessonTop(answered = false) {
       <span class="count">${shownNumber}/${L.total}</span>
     </div>
     <div class="lesson-meta">
-      <span>${L.subject.emoji} ${esc(L.subject.name)} · kl. ${L.grade} · ${esc(L.topic.name)}</span>
+      <span>${icon(L.subject.icon, 'inline')} ${esc(L.subject.name)} · kl. ${L.grade} · ${esc(L.topic.name)}</span>
       <span class="level lv${L.level}" title="Poziom trudności">${'●'.repeat(L.level)}${'○'.repeat(3 - L.level)} ${LEVELS[L.level]}</span>
     </div>`;
 }
@@ -278,13 +278,13 @@ function finishQuestion(result, given, correctAnswer) {
     if (L.streak >= 2 && L.level < 3) {
       L.level++;
       L.streak = 0;
-      levelMsg = '🔼 Świetnie idzie — poziom w górę!';
+      levelMsg = icon('wGore', 'inline') + ' Świetnie idzie — poziom w górę!';
     }
   } else {
     L.streak = 0;
     if (L.level > 1) {
       L.level--;
-      levelMsg = '🔽 Spokojnie — następne pytanie będzie łatwiejsze.';
+      levelMsg = icon('wDol', 'inline') + ' Spokojnie — następne pytanie będzie łatwiejsze.';
     }
   }
   L.maxLevel = Math.max(L.maxLevel, L.level);
@@ -306,7 +306,7 @@ function finishQuestion(result, given, correctAnswer) {
     <div class="feedback ${ok ? 'ok' : 'bad'}">
       ${header}
       ${result === 'ok-diacritics' ? '<div class="note">Uważaj na znaki (ą, ł, á, ñ…): poprawnie <b>' + esc(correctAnswer) + '</b></div>' : ''}
-      ${q.e ? `<div class="explain"><span>💡</span><div>${esc(q.e)}</div></div>` : ''}
+      ${q.e ? `<div class="explain">${icon('zarowka')}<div>${esc(q.e)}</div></div>` : ''}
       ${levelMsg ? `<div class="level-msg">${levelMsg}</div>` : ''}
     </div>
     <div class="row center"><button class="btn primary big-btn" id="next" style="--c:${L.subject.color}">${L.history.length >= L.total ? 'Zobacz wynik' : 'Dalej →'}</button></div>`;
@@ -345,7 +345,7 @@ function renderResults() {
     save(STORE_PROGRESS, all);
   }
 
-  const msg = pct === 100 ? 'Perfekcyjnie! 🎉' : pct >= 70 ? 'Świetna robota! 💪' : pct >= 50 ? 'Dobrze, ćwicz dalej! 👍' : 'Warto powtórzyć ten temat 📖';
+  const msg = pct === 100 ? 'Perfekcyjnie!' : pct >= 70 ? 'Świetna robota!' : pct >= 50 ? 'Dobrze, ćwicz dalej!' : 'Warto powtórzyć ten temat';
   const topics = L.subject.grades[L.grade];
   const nextTopic = topics[topics.indexOf(L.topic) + 1];
 
@@ -353,15 +353,15 @@ function renderResults() {
     <div class="results" style="--c:${L.subject.color}">
       <div class="big-stars">${starsHtml(stars)}</div>
       <h1>${msg}</h1>
-      <p class="sub">${L.subject.emoji} ${esc(L.subject.name)} · klasa ${L.grade} · ${esc(L.topic.name)}${L.retry ? ' · powtórka błędów' : ''}</p>
+      <p class="sub">${icon(L.subject.icon, 'inline')} ${esc(L.subject.name)} · klasa ${L.grade} · ${esc(L.topic.name)}${L.retry ? ' · powtórka błędów' : ''}</p>
       <div class="stats">
         <div class="stat"><div class="v">${good}/${L.history.length}</div><div class="l">poprawnych (${pct}%)</div></div>
         <div class="stat"><div class="v">${L.points}</div><div class="l">punktów</div></div>
         <div class="stat"><div class="v">${LEVELS[L.maxLevel]}</div><div class="l">najwyższy poziom</div></div>
       </div>
       <div class="row center">
-        ${mistakes.length ? `<button class="btn primary" id="retry" style="--c:${L.subject.color}">📖 Powtórz błędy (${mistakes.length})</button>` : ''}
-        <button class="btn" id="again">🔄 Jeszcze raz</button>
+        ${mistakes.length ? `<button class="btn primary" id="retry" style="--c:${L.subject.color}">${icon('powtorz', 'inline')} Powtórz błędy (${mistakes.length})</button>` : ''}
+        <button class="btn" id="again">${icon('powtorz', 'inline')} Jeszcze raz</button>
         ${nextTopic ? `<a class="btn" href="#/lekcja/${L.subject.id}/${L.grade}/${nextTopic.id}">Następny temat →</a>` : ''}
         <a class="btn" href="#/przedmiot/${L.subject.id}/${L.grade}">Lista tematów</a>
       </div>
@@ -372,7 +372,7 @@ function renderResults() {
         <div class="review">
           <div class="q">${esc(h.q.q)}</div>
           <div class="a">Twoja odpowiedź: <s>${esc(h.given)}</s> · Poprawna: <b>${esc(h.correctAnswer)}</b></div>
-          ${h.q.e ? `<div class="e">💡 ${esc(h.q.e)}</div>` : ''}
+          ${h.q.e ? `<div class="e">${icon('zarowka', 'inline')} ${esc(h.q.e)}</div>` : ''}
         </div>`).join('')}` : ''}`;
 
   const retry = app.querySelector('#retry');

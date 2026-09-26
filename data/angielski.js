@@ -1,6 +1,6 @@
 // Język angielski. Format pytań jak w polski.js (o: pierwsza poprawna, t: do wpisania).
 SUBJECTS.push({
-  id: 'angielski', name: 'Język angielski', emoji: '💬', color: '#26890c',
+  id: 'angielski', name: 'Język angielski', icon: 'dymekEN', color: '#26890c',
   grades: {
     4: [
       { id: 'slowka-4', name: 'Kolory, liczby, zwierzęta', questions: [

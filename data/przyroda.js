@@ -1,6 +1,6 @@
 // Przyroda (kl. 4), biologia i geografia (kl. 5–8). Format pytań jak w polski.js.
 SUBJECTS.push({
-  id: 'przyroda', name: 'Przyroda', emoji: '🌿', color: '#2a9d8f',
+  id: 'przyroda', name: 'Przyroda', icon: 'lisc', color: '#2a9d8f',
   grades: {
     4: [
       { id: 'kierunki', name: 'Kierunki i mapa', questions: [
@@ -30,7 +30,7 @@ SUBJECTS.push({
 });
 
 SUBJECTS.push({
-  id: 'biologia', name: 'Biologia', emoji: '🧬', color: '#66bf39',
+  id: 'biologia', name: 'Biologia', icon: 'dna', color: '#66bf39',
   grades: {
     5: [
       { id: 'komorka', name: 'Komórka i organizmy', questions: [
@@ -220,7 +220,7 @@ SUBJECTS.push({
 });
 
 SUBJECTS.push({
-  id: 'geografia', name: 'Geografia', emoji: '🌍', color: '#d89e00',
+  id: 'geografia', name: 'Geografia', icon: 'globus', color: '#d89e00',
   grades: {
     5: [
       { id: 'mapa', name: 'Mapa i skala', questions: [

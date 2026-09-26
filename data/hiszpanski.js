@@ -1,7 +1,7 @@
 // Język hiszpański. Format pytań jak w polski.js (o: pierwsza poprawna, t: do wpisania).
 // Odpowiedź wpisana bez akcentów (np. "estan") jest zaliczana, ale strona przypomina o akcencie.
 SUBJECTS.push({
-  id: 'hiszpanski', name: 'Język hiszpański', emoji: '💃', color: '#c2410c',
+  id: 'hiszpanski', name: 'Język hiszpański', icon: 'dymekES', color: '#c2410c',
   grades: {
     7: [
       { id: 'czasowniki-presente', name: 'Czasowniki w czasie teraźniejszym', questions: [

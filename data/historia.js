@@ -1,6 +1,6 @@
 // Historia. Format pytań jak w polski.js (o: pierwsza poprawna, t: do wpisania).
 SUBJECTS.push({
-  id: 'historia', name: 'Historia', emoji: '🏰', color: '#b8641c',
+  id: 'historia', name: 'Historia', icon: 'zamek', color: '#b8641c',
   grades: {
     4: [
       { id: 'poczatki-polski', name: 'Początki państwa polskiego', questions: [

@@ -12,7 +12,7 @@
   const choice = (q, right, wrong, e) => ({ q, o: [right, ...[...new Set(wrong)].filter(w => w !== right).slice(0, 3)], e });
 
   SUBJECTS.push({
-    id: 'matematyka', name: 'Matematyka', emoji: '🧮', color: '#1368ce',
+    id: 'matematyka', name: 'Matematyka', icon: 'kalkulator', color: '#1368ce',
     grades: {
       4: [
         { id: 'dodawanie', name: 'Dodawanie i odejmowanie', gen: l => {
